@@ -1,0 +1,581 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,debug_session_log,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+ClassEval_10,deepseek-chat,classeval,True,True,"class BinaryDataProcessor:
+    """"""
+    This is a class used to process binary data, which includes functions such as clearing non 0 or 1 characters, counting binary string information, and converting to corresponding strings based on different encoding methods.
+    """"""
+
+    def __init__(self, binary_string):
+        """"""
+        Initialize the class with a binary string and clean it by removing all non 0 or 1 characters.
+        """"""
+        self.binary_string = binary_string
+        self.clean_non_binary_chars()
+
+    def clean_non_binary_chars(self):
+        """"""
+        Clean the binary string by removing all non 0 or 1 characters.
+        >>> bdp = BinaryDataProcessor(""01101000daf3e4r01100101011011000110110001101111"")
+        >>> bdp.clean_non_binary_chars()
+        >>> bdp.binary_string
+        '0110100001100101011011000110110001101111'
+
+        """"""
+        self.binary_string = ''.join(c for c in self.binary_string if c in '01')
+
+    def calculate_binary_info(self):
+        """"""
+        Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.calculate_binary_info()
+        {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
+
+        """"""
+        if not self.binary_string:
+            return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
+        length = len(self.binary_string)
+        ones = self.binary_string.count('1')
+        zeroes = length - ones
+        return {
+            'Zeroes': round(zeroes / length, 3),
+            'Ones': round(ones / length, 3),
+            'Bit length': length
+        }
+
+    def convert_to_ascii(self):
+        """"""
+        Convert the binary string to ascii string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.convert_to_ascii()
+        'hello'
+
+        """"""
+        if len(self.binary_string) % 8 != 0:
+            raise ValueError(""Binary string length must be a multiple of 8 for ASCII conversion"")
+        result = ''
+        for i in range(0, len(self.binary_string), 8):
+            byte = self.binary_string[i:i+8]
+            result += chr(int(byte, 2))
+        return result
+
+    def convert_to_utf8(self):
+        """"""
+        Convert the binary string to utf-8 string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.convert_to_utf8()
+        'hello'
+
+        """"""
+        if len(self.binary_string) % 8 != 0:
+            raise ValueError(""Binary string length must be a multiple of 8 for UTF-8 conversion"")
+        result = ''
+        for i in range(0, len(self.binary_string), 8):
+            byte = self.binary_string[i:i+8]
+            result += chr(int(byte, 2))
+        return result","{""passed"": false, ""passed_count"": 18, ""failed_count"": 3, ""total_count"": 21, ""passed_tests"": [""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_4"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_2"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_3"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_4"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_5"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_2"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_3"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_4"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_5"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_2"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_3"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_4"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_5"", ""builtins.BinaryDataProcessorTestMain.test_main""], ""failed_tests"": [{""name"": ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 105, in test_calculate_binary_info_2\nAssertionError: {'Zeroes': 0.464, 'Ones': 0.536, 'Bit length': 28} != {'Bit length': 28, 'Ones': 0.5357142857142857, 'Zeroes': 0.4642857142857143}\n- {'Bit length': 28, 'Ones': 0.536, 'Zeroes': 0.464}\n?                                ^\n\n+ {'Bit length': 28, 'Ones': 0.5357142857142857, 'Zeroes': 0.4642857142857143}\n?                                ^^^^^^^^^^^^^^                 +++++++++++++\n\n""}, {""name"": ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 109, in test_calculate_binary_info_3\nAssertionError: {'Zeroes': 0.379, 'Ones': 0.621, 'Bit length': 29} != {'Bit length': 29, 'Ones': 0.6206896551724138, 'Zeroes': 0.3793103448275862}\n- {'Bit length': 29, 'Ones': 0.621, 'Zeroes': 0.379}\n+ {'Bit length': 29, 'Ones': 0.6206896551724138, 'Zeroes': 0.3793103448275862}\n?                                +++++++ ++++++                 +++++++++++++\n\n""}, {""name"": ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 117, in test_calculate_binary_info_5\nAssertionError: {'Zeroes': 0.438, 'Ones': 0.562, 'Bit length': 16} != {'Bit length': 16, 'Ones': 0.5625, 'Zeroes': 0.4375}\n- {'Bit length': 16, 'Ones': 0.562, 'Zeroes': 0.438}\n?                                                 ^\n\n+ {'Bit length': 16, 'Ones': 0.5625, 'Zeroes': 0.4375}\n?                                 +                ^^\n\n""}], ""stderr_output"": """", ""result"": null}",False,"class BinaryDataProcessor:
+    """"""
+    This is a class used to process binary data, which includes functions such as clearing non 0 or 1 characters, counting binary string information, and converting to corresponding strings based on different encoding methods.
+    """"""
+
+    def __init__(self, binary_string):
+        """"""
+        Initialize the class with a binary string and clean it by removing all non 0 or 1 characters.
+        """"""
+        self.binary_string = binary_string
+        self.clean_non_binary_chars()
+
+    def clean_non_binary_chars(self):
+        """"""
+        Clean the binary string by removing all non 0 or 1 characters.
+        >>> bdp = BinaryDataProcessor(""01101000daf3e4r01100101011011000110110001101111"")
+        >>> bdp.clean_non_binary_chars()
+        >>> bdp.binary_string
+        '0110100001100101011011000110110001101111'
+
+        """"""
+        self.binary_string = ''.join(c for c in self.binary_string if c in '01')
+
+    def calculate_binary_info(self):
+        """"""
+        Calculate the binary string information, including the percentage of 0 and 1, and the total length of the binary string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.calculate_binary_info()
+        {'Zeroes': 0.475, 'Ones': 0.525, 'Bit length': 40}
+
+        """"""
+        if not self.binary_string:
+            return {'Zeroes': 0.0, 'Ones': 0.0, 'Bit length': 0}
+        length = len(self.binary_string)
+        ones = self.binary_string.count('1')
+        zeroes = length - ones
+        return {
+            'Zeroes': zeroes / length,
+            'Ones': ones / length,
+            'Bit length': length
+        }
+
+    def convert_to_ascii(self):
+        """"""
+        Convert the binary string to ascii string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.convert_to_ascii()
+        'hello'
+
+        """"""
+        if len(self.binary_string) % 8 != 0:
+            raise ValueError(""Binary string length must be a multiple of 8 for ASCII conversion"")
+        result = ''
+        for i in range(0, len(self.binary_string), 8):
+            byte = self.binary_string[i:i+8]
+            result += chr(int(byte, 2))
+        return result
+
+    def convert_to_utf8(self):
+        """"""
+        Convert the binary string to utf-8 string.
+        >>> bdp = BinaryDataProcessor(""0110100001100101011011000110110001101111"")
+        >>> bdp.convert_to_utf8()
+        'hello'
+
+        """"""
+        if len(self.binary_string) % 8 != 0:
+            raise ValueError(""Binary string length must be a multiple of 8 for UTF-8 conversion"")
+        result = ''
+        for i in range(0, len(self.binary_string), 8):
+            byte = self.binary_string[i:i+8]
+            result += chr(int(byte, 2))
+        return result","{""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_2"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_3"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_4"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_5"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_2"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_3"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_4"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_5"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_2"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_3"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_4"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_5"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_2"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_3"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_4"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_5"", ""builtins.BinaryDataProcessorTestMain.test_main""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,"[{""attempt"": 1, ""plan"": ""# Step 1: Analyze the captured output and instrumented code.\n# The failing tests are for calculate_binary_info. The expected values use full precision\n# (e.g., 0.6206896551724138) while the code rounds to 3 decimal places (0.621).\n# The rounding is the bug. The original problem description's docstring shows rounded values,\n# but the actual test suite expects unrounded float results.\n\n# Step 2: Root cause.\n# In calculate_binary_info, the line:\n#   'Zeroes': round(zeroes / length, 3),\n#   'Ones': round(ones / length, 3),\n# rounds the proportions to 3 decimal places. The test cases expect the exact float division\n# result without rounding. This causes assertion mismatches for any input where the proportion\n# has more than 3 decimal places.\n\n# Step 3: Lessons from previous attempts.\n# No previous attempts were provided. The key lesson is to trust the test expectations over\n# the docstring examples. The docstring shows rounded values, but the test suite clearly\n# requires unrounded values. The fix is to remove the rounding.\n\n# Step 4: Actionable plan.\n# 1. Locate the calculate_binary_info method.\n# 2. Change the result dictionary to use exact division without round():\n#    'Zeroes': zeroes / length,\n#    'Ones': ones / length,\n# 3. Keep 'Bit length' as is.\n# 4. Ensure the empty string case still returns 0.0 for both proportions.\n# 5. No changes needed to other methods (clean_non_binary_chars, convert_to_ascii, convert_to_utf8)\n#    because the failures are only in calculate_binary_info.\n# 6. After the fix, the method will return full precision floats matching the test expectations."", ""eval_result"": {""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_2"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_3"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_4"", ""builtins.BinaryDataProcessorTestCalculateBinaryInfo.test_calculate_binary_info_5"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_2"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_3"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_4"", ""builtins.BinaryDataProcessorTestCleanNonBinaryChars.test_clean_non_binary_chars_5"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_2"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_3"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_4"", ""builtins.BinaryDataProcessorTestConvertToAscii.test_convert_to_ascii_5"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_2"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_3"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_4"", ""builtins.BinaryDataProcessorTestConvertToUtf8.test_convert_to_utf8_5"", ""builtins.BinaryDataProcessorTestMain.test_main""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,6482,3169,36.83850693702698
+ClassEval_11,deepseek-chat,classeval,True,True,"class BitStatusUtil:
+    """"""
+    This is a utility class that provides methods for manipulating and checking status using bitwise operations.
+    """"""
+
+    @staticmethod
+    def add(states, stat):
+        """"""
+        Add a status to the current status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Status to be added,int.
+        :return: The status after adding the status,int.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.add(2,4)
+        6
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        return states | stat
+
+    @staticmethod
+    def has(states, stat):
+        """"""
+        Check if the current status contains the specified status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Specified status,int.
+        :return: True if the current status contains the specified status,otherwise False,bool.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.has(6,2)
+        True
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        return (states & stat) == stat
+
+    @staticmethod
+    def remove(states, stat):
+        """"""
+        Remove the specified status from the current status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Specified status,int.
+        :return: The status after removing the specified status,int.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.remove(6,2)
+        4
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        if BitStatusUtil.has(states, stat):
+            return states ^ stat
+        return states
+
+    @staticmethod
+    def check(args):
+        """"""
+        Check if the parameters are legal, args must be greater than or equal to 0 and must be even,if not,raise ValueError.
+        :param args: Parameters to be checked,list.
+        :return: None.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.check([2,3,4])
+        Traceback (most recent call last):
+        ...
+        ValueError: 3 not even
+        """"""
+        for arg in args:
+            if arg < 0:
+                raise ValueError(f""{arg} must be greater than or equal to 0"")
+            if arg % 2 != 0:
+                raise ValueError(f""{arg} not even"")","{""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BitStatusUtilTestAdd.test_add"", ""builtins.BitStatusUtilTestAdd.test_add_2"", ""builtins.BitStatusUtilTestAdd.test_add_3"", ""builtins.BitStatusUtilTestAdd.test_add_4"", ""builtins.BitStatusUtilTestAdd.test_add_5"", ""builtins.BitStatusUtilTestCheck.test_check"", ""builtins.BitStatusUtilTestCheck.test_check_2"", ""builtins.BitStatusUtilTestCheck.test_check_3"", ""builtins.BitStatusUtilTestCheck.test_check_4"", ""builtins.BitStatusUtilTestCheck.test_check_5"", ""builtins.BitStatusUtilTestHas.test_has"", ""builtins.BitStatusUtilTestHas.test_has_2"", ""builtins.BitStatusUtilTestHas.test_has_3"", ""builtins.BitStatusUtilTestHas.test_has_4"", ""builtins.BitStatusUtilTestHas.test_has_5"", ""builtins.BitStatusUtilTestMain.test_main"", ""builtins.BitStatusUtilTestRemove.test_remove"", ""builtins.BitStatusUtilTestRemove.test_remove_2"", ""builtins.BitStatusUtilTestRemove.test_remove_3"", ""builtins.BitStatusUtilTestRemove.test_remove_4"", ""builtins.BitStatusUtilTestRemove.test_remove_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,"class BitStatusUtil:
+    """"""
+    This is a utility class that provides methods for manipulating and checking status using bitwise operations.
+    """"""
+
+    @staticmethod
+    def add(states, stat):
+        """"""
+        Add a status to the current status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Status to be added,int.
+        :return: The status after adding the status,int.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.add(2,4)
+        6
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        return states | stat
+
+    @staticmethod
+    def has(states, stat):
+        """"""
+        Check if the current status contains the specified status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Specified status,int.
+        :return: True if the current status contains the specified status,otherwise False,bool.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.has(6,2)
+        True
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        return (states & stat) == stat
+
+    @staticmethod
+    def remove(states, stat):
+        """"""
+        Remove the specified status from the current status,and check the parameters wheather they are legal.
+        :param states: Current status,int.
+        :param stat: Specified status,int.
+        :return: The status after removing the specified status,int.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.remove(6,2)
+        4
+
+        """"""
+        BitStatusUtil.check([states, stat])
+        if BitStatusUtil.has(states, stat):
+            return states ^ stat
+        return states
+
+    @staticmethod
+    def check(args):
+        """"""
+        Check if the parameters are legal, args must be greater than or equal to 0 and must be even,if not,raise ValueError.
+        :param args: Parameters to be checked,list.
+        :return: None.
+        >>> bit_status_util = BitStatusUtil()
+        >>> bit_status_util.check([2,3,4])
+        Traceback (most recent call last):
+        ...
+        ValueError: 3 not even
+        """"""
+        for arg in args:
+            if arg < 0:
+                raise ValueError(f""{arg} must be greater than or equal to 0"")
+            if arg % 2 != 0:
+                raise ValueError(f""{arg} not even"")","{""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BitStatusUtilTestAdd.test_add"", ""builtins.BitStatusUtilTestAdd.test_add_2"", ""builtins.BitStatusUtilTestAdd.test_add_3"", ""builtins.BitStatusUtilTestAdd.test_add_4"", ""builtins.BitStatusUtilTestAdd.test_add_5"", ""builtins.BitStatusUtilTestCheck.test_check"", ""builtins.BitStatusUtilTestCheck.test_check_2"", ""builtins.BitStatusUtilTestCheck.test_check_3"", ""builtins.BitStatusUtilTestCheck.test_check_4"", ""builtins.BitStatusUtilTestCheck.test_check_5"", ""builtins.BitStatusUtilTestHas.test_has"", ""builtins.BitStatusUtilTestHas.test_has_2"", ""builtins.BitStatusUtilTestHas.test_has_3"", ""builtins.BitStatusUtilTestHas.test_has_4"", ""builtins.BitStatusUtilTestHas.test_has_5"", ""builtins.BitStatusUtilTestMain.test_main"", ""builtins.BitStatusUtilTestRemove.test_remove"", ""builtins.BitStatusUtilTestRemove.test_remove_2"", ""builtins.BitStatusUtilTestRemove.test_remove_3"", ""builtins.BitStatusUtilTestRemove.test_remove_4"", ""builtins.BitStatusUtilTestRemove.test_remove_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,,Passed on direct generation,514,534,11.054007291793823
+ClassEval_12,deepseek-chat,classeval,True,True,"import random
+
+class BlackjackGame:
+    """"""
+    This is a class representing a game of blackjack, which includes creating a deck, calculating the value of a hand, and determine the winner based on the hand values of the player and dealer.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the Blackjack Game with the attribute deck, player_hand and dealer_hand.
+        While initializing deck attribute, call the create_deck method to generate.
+        The deck stores 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].
+        player_hand is a list which stores player's hand cards.
+        dealer_hand is is a list which stores dealer's hand cards.
+        """"""
+        self.deck = self.create_deck()
+        self.player_hand = []
+        self.dealer_hand = []
+
+    def create_deck(self):
+        """"""
+        Create a deck of 52 cards, which stores 52 rondom order poker with the Jokers removed.
+        :return: a list of 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].
+        >>> black_jack_game = BlackjackGame()
+        >>> black_jack_game.create_deck()
+        ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',
+        '6C', '7C', '3D', '10C', 'AD', '4C', '5D', 'AH', '2D', 'QC', 'KH', '9C', '9H',
+        '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',
+        '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
+        """"""
+        suits = ['S', 'H', 'D', 'C']
+        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        deck = [rank + suit for suit in suits for rank in ranks]
+        random.shuffle(deck)
+        return deck
+
+    def calculate_hand_value(self, hand):
+        """"""
+        Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.
+        If the card is a digit, its value is added to the total hand value.
+        Value of J, Q, or K is 10, while Aces are worth 11.
+        If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,
+        until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.
+        :param hand: list
+        :return: the value of the poker cards stored in hand list, a number.
+        >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])
+        40
+        """"""
+        value = 0
+        aces = 0
+        for card in hand:
+            rank = card[:-1]
+            if rank in ['J', 'Q', 'K']:
+                value += 10
+            elif rank == 'A':
+                value += 11
+                aces += 1
+            else:
+                value += int(rank)
+        while value > 21 and aces > 0:
+            value -= 10
+            aces -= 1
+        return value
+
+    def check_winner(self, player_hand, dealer_hand):
+        """"""
+        Determines the winner of a game by comparing the hand values of the player and dealer.
+        rule:
+        If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.
+        Otherwise, the winner is the one with the lower hand value.
+        :param player_hand: list
+        :param dealer_hand: list
+        :return: the result of the game, only two certain str: 'Dealer wins' or 'Player wins'
+        >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
+        'Player wins'
+        """"""
+        player_value = self.calculate_hand_value(player_hand)
+        dealer_value = self.calculate_hand_value(dealer_hand)
+        
+        if player_value <= 21 and dealer_value <= 21:
+            if player_value > dealer_value:
+                return 'Player wins'
+            else:
+                return 'Dealer wins'
+        else:
+            if player_value < dealer_value:
+                return 'Player wins'
+            else:
+                return 'Dealer wins'","{""passed"": false, ""passed_count"": 17, ""failed_count"": 1, ""total_count"": 18, ""passed_tests"": [""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_1"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_2"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_3"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_4"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_5"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_1"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_2"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_3"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_4"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_5"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_6"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_1"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_2"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_3"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_4"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_5"", ""builtins.BlackjackGameTestMain.test_main_1""], ""failed_tests"": [{""name"": ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_6"", ""type"": ""Error"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 158, in test_calculate_hand_value_6\n  File \""<string>\"", line 59, in calculate_hand_value\nValueError: invalid literal for int() with base 10: 'B'\n""}], ""stderr_output"": """", ""result"": null}",False,"import random
+
+class BlackjackGame:
+    """"""
+    This is a class representing a game of blackjack, which includes creating a deck, calculating the value of a hand, and determine the winner based on the hand values of the player and dealer.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the Blackjack Game with the attribute deck, player_hand and dealer_hand.
+        While initializing deck attribute, call the create_deck method to generate.
+        The deck stores 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].
+        player_hand is a list which stores player's hand cards.
+        dealer_hand is is a list which stores dealer's hand cards.
+        """"""
+        self.deck = self.create_deck()
+        self.player_hand = []
+        self.dealer_hand = []
+
+    def create_deck(self):
+        """"""
+        Create a deck of 52 cards, which stores 52 rondom order poker with the Jokers removed.
+        :return: a list of 52 rondom order poker with the Jokers removed, format is ['AS', '2S', ...].
+        >>> black_jack_game = BlackjackGame()
+        >>> black_jack_game.create_deck()
+        ['QD', '9D', 'JC', 'QH', '2S', 'JH', '7D', '6H', '9S', '5C', '7H', 'QS', '5H',
+        '6C', '7C', '3D', '10C', 'AD', '4C', '5D', 'AH', '2D', 'QC', 'KH', '9C', '9H',
+        '4H', 'JS', '6S', '8H', '8C', '4S', '3H', '10H', '7S', '6D', '3C', 'KC', '3S',
+        '2H', '10D', 'KS', '4D', 'AC', '10S', '2C', 'KD', '5S', 'JD', '8S', 'AS', '8D']
+        """"""
+        suits = ['S', 'H', 'D', 'C']
+        ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']
+        deck = [rank + suit for suit in suits for rank in ranks]
+        random.shuffle(deck)
+        return deck
+
+    def calculate_hand_value(self, hand):
+        """"""
+        Calculate the value of the poker cards stored in hand list according to the rules of the Blackjack Game.
+        If the card is a digit, its value is added to the total hand value.
+        Value of J, Q, or K is 10, while Aces are worth 11.
+        If the total hand value exceeds 21 and there are Aces present, one Ace is treated as having a value of 1 instead of 11,
+        until the hand value is less than or equal to 21, or all Aces have been counted as value of 1.
+        :param hand: list
+        :return: the value of the poker cards stored in hand list, a number.
+        >>> black_jack_game.calculate_hand_value(['QD', '9D', 'JC', 'QH', 'AS'])
+        40
+        """"""
+        value = 0
+        aces = 0
+        for card in hand:
+            rank = card[:-1]
+            if rank in ['J', 'Q', 'K']:
+                value += 10
+            elif rank == 'A':
+                value += 11
+                aces += 1
+            elif rank.isdigit():
+                value += int(rank)
+            # else: invalid rank, skip it
+        while value > 21 and aces > 0:
+            value -= 10
+            aces -= 1
+        return value
+
+    def check_winner(self, player_hand, dealer_hand):
+        """"""
+        Determines the winner of a game by comparing the hand values of the player and dealer.
+        rule:
+        If both players have hand values that are equal to or less than 21, the winner is the one whose hand value is closer to 21.
+        Otherwise, the winner is the one with the lower hand value.
+        :param player_hand: list
+        :param dealer_hand: list
+        :return: the result of the game, only two certain str: 'Dealer wins' or 'Player wins'
+        >>> black_jack_game.check_winner(['QD', '9D', 'JC', 'QH', 'AS'], ['QD', '9D', 'JC', 'QH', '2S'])
+        'Player wins'
+        """"""
+        player_value = self.calculate_hand_value(player_hand)
+        dealer_value = self.calculate_hand_value(dealer_hand)
+        
+        if player_value <= 21 and dealer_value <= 21:
+            if player_value > dealer_value:
+                return 'Player wins'
+            else:
+                return 'Dealer wins'
+        else:
+            if player_value < dealer_value:
+                return 'Player wins'
+            else:
+                return 'Dealer wins'","{""passed"": true, ""passed_count"": 18, ""failed_count"": 0, ""total_count"": 18, ""passed_tests"": [""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_1"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_2"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_3"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_4"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_5"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_6"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_1"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_2"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_3"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_4"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_5"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_6"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_1"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_2"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_3"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_4"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_5"", ""builtins.BlackjackGameTestMain.test_main_1""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,"[{""attempt"": 1, ""plan"": ""# Step 1 & 2: Analysis of the bug\n# The error occurs in calculate_hand_value when processing a card with rank 'B' (from hand ['JS', 'QS', 'BS', 'CS']).\n# The code assumes every card rank is either a digit, 'J'/'Q'/'K', or 'A'. However, the test passes invalid card ranks like 'B' and 'C'.\n# The root cause: The function does not handle unknown/invalid ranks gracefully. It tries int(rank) for any non-face/non-ace rank, causing ValueError.\n# The test expects that invalid ranks should be ignored (or treated as 0) so that the hand value is computed from valid cards only.\n# In the failing test, hand=['JS', 'QS', 'BS', 'CS'] should yield value 20 (10+10+0+0), but the code crashes on 'B'.\n\n# Step 3: No previous attempts, so no lessons to avoid. The plan is to add a guard for invalid ranks.\n\n# Step 4: Actionable plan:\n# 1. In calculate_hand_value, after extracting rank, check if rank is a valid digit (i.e., rank.isdigit()).\n# 2. If rank is a digit, add int(rank). If rank is 'J','Q','K' add 10. If rank is 'A' handle ace logic.\n# 3. For any other rank (like 'B','C'), skip it (do not add to value, do not count as ace).\n# 4. Keep the ace adjustment loop unchanged.\n# 5. This will make the function robust to invalid card inputs, matching the test expectation.\n\n# The fix is minimal and preserves the original structure."", ""eval_result"": {""passed"": true, ""passed_count"": 18, ""failed_count"": 0, ""total_count"": 18, ""passed_tests"": [""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_1"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_2"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_3"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_4"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_5"", ""builtins.BlackjackGameTestCalculateHandValue.test_calculate_hand_value_6"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_1"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_2"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_3"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_4"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_5"", ""builtins.BlackjackGameTestCheckWinner.test_check_winner_6"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_1"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_2"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_3"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_4"", ""builtins.BlackjackGameTestCreateDeck.test_create_deck_5"", ""builtins.BlackjackGameTestMain.test_main_1""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,7724,4565,41.227413177490234
+ClassEval_13,deepseek-chat,classeval,True,True,"class BookManagement:
+    """"""
+    This is a class as managing books system, which supports to add and remove books from the inventory dict, view the inventory, and check the quantity of a specific book.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the inventory of Book Manager.
+        """"""
+        self.inventory = {}
+
+    def add_book(self, title, quantity=1):
+        """"""
+        Add one or several books to inventory which is sorted by book title.
+        :param title: str, the book title
+        :param quantity: int, default value is 1.
+        """"""
+        if title in self.inventory:
+            self.inventory[title] += quantity
+        else:
+            self.inventory[title] = quantity
+        self.inventory = dict(sorted(self.inventory.items()))
+
+    def remove_book(self, title, quantity):
+        """"""
+        Remove one or several books from inventory which is sorted by book title.
+        Raise false while get invalid input.
+        :param title: str, the book title
+        :param quantity: int
+        """"""
+        if title not in self.inventory or quantity < 0 or quantity > self.inventory[title]:
+            return False
+        self.inventory[title] -= quantity
+        if self.inventory[title] == 0:
+            del self.inventory[title]
+        return True
+
+    def view_inventory(self):
+        """"""
+        Get the inventory of the Book Management.
+        :return self.inventory: dictionary, {title(str): quantity(int), ...}
+        >>> bookManagement = BookManagement()
+        >>> bookManagement.add_book(""book1"", 1)
+        >>> bookManagement.add_book(""book2"", 1)
+        >>> bookManagement.view_inventory()
+        {'book1': 1, 'book2': 1}
+        """"""
+        return self.inventory
+
+    def view_book_quantity(self, title):
+        """"""
+        Get the quantity of a book.
+        :param title: str, the title of the book.
+        :return quantity: the quantity of this book title. return 0 when the title does not exist in self.invenroty
+        >>> bookManagement = BookManagement()
+        >>> bookManagement.add_book(""book1"", 1)
+        >>> bookManagement.view_book_quantity(""book3"")
+        0
+        """"""
+        return self.inventory.get(title, 0)","{""passed"": false, ""passed_count"": 18, ""failed_count"": 3, ""total_count"": 21, ""passed_tests"": [""builtins.BookManagementTestAddBook.test_add_book_1"", ""builtins.BookManagementTestAddBook.test_add_book_2"", ""builtins.BookManagementTestAddBook.test_add_book_3"", ""builtins.BookManagementTestAddBook.test_add_book_4"", ""builtins.BookManagementTestAddBook.test_add_book_5"", ""builtins.BookManagementTestMain.test_main"", ""builtins.BookManagementTestRemoveBook.test_remove_book_1"", ""builtins.BookManagementTestRemoveBook.test_remove_book_2"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_1"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_2"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_3"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_4"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_5"", ""builtins.BookManagementTestViewInventory.test_view_inventory_1"", ""builtins.BookManagementTestViewInventory.test_view_inventory_2"", ""builtins.BookManagementTestViewInventory.test_view_inventory_3"", ""builtins.BookManagementTestViewInventory.test_view_inventory_4"", ""builtins.BookManagementTestViewInventory.test_view_inventory_5""], ""failed_tests"": [{""name"": ""builtins.BookManagementTestRemoveBook.test_remove_book_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 111, in test_remove_book_3\nAssertionError: Exception not raised\n""}, {""name"": ""builtins.BookManagementTestRemoveBook.test_remove_book_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 116, in test_remove_book_4\nAssertionError: Exception not raised\n""}, {""name"": ""builtins.BookManagementTestRemoveBook.test_remove_book_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 120, in test_remove_book_5\nAssertionError: Exception not raised\n""}], ""stderr_output"": """", ""result"": null}",False,"class BookManagement:
+    """"""
+    This is a class as managing books system, which supports to add and remove books from the inventory dict, view the inventory, and check the quantity of a specific book.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the inventory of Book Manager.
+        """"""
+        self.inventory = {}
+
+    def add_book(self, title, quantity=1):
+        """"""
+        Add one or several books to inventory which is sorted by book title.
+        :param title: str, the book title
+        :param quantity: int, default value is 1.
+        """"""
+        if title in self.inventory:
+            self.inventory[title] += quantity
+        else:
+            self.inventory[title] = quantity
+        self.inventory = dict(sorted(self.inventory.items()))
+
+    def remove_book(self, title, quantity):
+        """"""
+        Remove one or several books from inventory which is sorted by book title.
+        Raise exception while get invalid input.
+        :param title: str, the book title
+        :param quantity: int
+        """"""
+        # Raise exception for invalid input instead of returning False
+        if title not in self.inventory or quantity < 0 or quantity > self.inventory[title]:
+            raise ValueError(""Invalid removal: book not found or quantity invalid"")
+        self.inventory[title] -= quantity
+        if self.inventory[title] == 0:
+            del self.inventory[title]
+        return True
+
+    def view_inventory(self):
+        """"""
+        Get the inventory of the Book Management.
+        :return self.inventory: dictionary, {title(str): quantity(int), ...}
+        >>> bookManagement = BookManagement()
+        >>> bookManagement.add_book(""book1"", 1)
+        >>> bookManagement.add_book(""book2"", 1)
+        >>> bookManagement.view_inventory()
+        {'book1': 1, 'book2': 1}
+        """"""
+        return self.inventory
+
+    def view_book_quantity(self, title):
+        """"""
+        Get the quantity of a book.
+        :param title: str, the title of the book.
+        :return quantity: the quantity of this book title. return 0 when the title does not exist in self.invenroty
+        >>> bookManagement = BookManagement()
+        >>> bookManagement.add_book(""book1"", 1)
+        >>> bookManagement.view_book_quantity(""book3"")
+        0
+        """"""
+        return self.inventory.get(title, 0)","{""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BookManagementTestAddBook.test_add_book_1"", ""builtins.BookManagementTestAddBook.test_add_book_2"", ""builtins.BookManagementTestAddBook.test_add_book_3"", ""builtins.BookManagementTestAddBook.test_add_book_4"", ""builtins.BookManagementTestAddBook.test_add_book_5"", ""builtins.BookManagementTestMain.test_main"", ""builtins.BookManagementTestRemoveBook.test_remove_book_1"", ""builtins.BookManagementTestRemoveBook.test_remove_book_2"", ""builtins.BookManagementTestRemoveBook.test_remove_book_3"", ""builtins.BookManagementTestRemoveBook.test_remove_book_4"", ""builtins.BookManagementTestRemoveBook.test_remove_book_5"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_1"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_2"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_3"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_4"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_5"", ""builtins.BookManagementTestViewInventory.test_view_inventory_1"", ""builtins.BookManagementTestViewInventory.test_view_inventory_2"", ""builtins.BookManagementTestViewInventory.test_view_inventory_3"", ""builtins.BookManagementTestViewInventory.test_view_inventory_4"", ""builtins.BookManagementTestViewInventory.test_view_inventory_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,"[{""attempt"": 1, ""plan"": ""# Step 1: Analyze the captured output and instrumented code.\n# The failing tests are test_remove_book_4 and test_remove_book_5.\n# In both cases, the test calls remove_book with a quantity that exceeds the available stock.\n# The instrumented code shows:\n#   - remove_book checks: if title not in inventory or quantity < 0 or quantity > self.inventory[title]\n#   - For test_remove_book_4: title exists, quantity is positive, but quantity > inventory[title] is True.\n#   - The method returns False.\n#   - The test expects an Exception to be raised (assertRaises(Exception)).\n# Since remove_book returns False instead of raising an exception, the test fails with \""Exception not raised\"".\n#\n# The original problem description states:\n#   \""Remove one or several books from inventory which is sorted by book title.\n#    Raise false while get invalid input.\""\n# This is ambiguous, but the test clearly expects an exception for invalid input (quantity > available).\n# The current implementation returns False, which does not satisfy the test.\n#\n# Step 2: Root cause of the bug.\n# The bug is that remove_book returns False for invalid removal conditions (e.g., quantity > stock).\n# The test suite expects an exception (likely ValueError or similar) to be raised in such cases.\n# The original code structure (as given in the problem description) likely intended to raise an exception,\n# but the instrumented code was modified to return False, causing the test failure.\n#\n# Step 3: Review MISTAKES TO AVOID.\n# No previous attempts are listed. The lesson is to align the method's behavior with the test expectations.\n# The test uses assertRaises(Exception), so the method must raise an exception for invalid input,\n# not just return False.\n#\n# Step 4: Actionable plan to fix the bug in the original code structure.\n# Modify the remove_book method to raise an exception (e.g., ValueError) when the removal is invalid,\n# instead of returning False. The invalid conditions are:\n#   - title not in inventory\n#   - quantity < 0\n#   - quantity > self.inventory[title]\n# For valid removals, keep the existing logic (subtract quantity, delete if zero, return True).\n# This change will make the method raise an exception for the failing tests, satisfying assertRaises.\n\nclass BookManagement:\n    def __init__(self):\n        self.inventory = {}\n\n    def add_book(self, title, quantity=1):\n        if title in self.inventory:\n            self.inventory[title] += quantity\n        else:\n            self.inventory[title] = quantity\n        self.inventory = dict(sorted(self.inventory.items()))\n\n    def remove_book(self, title, quantity):\n        # Raise exception for invalid input instead of returning False\n        if title not in self.inventory or quantity < 0 or quantity > self.inventory[title]:\n            raise ValueError(\""Invalid removal: book not found or quantity invalid\"")\n        self.inventory[title] -= quantity\n        if self.inventory[title] == 0:\n            del self.inventory[title]\n        return True\n\n    def view_inventory(self):\n        return self.inventory\n\n    def view_book_quantity(self, title):\n        return self.inventory.get(title, 0)"", ""eval_result"": {""passed"": true, ""passed_count"": 21, ""failed_count"": 0, ""total_count"": 21, ""passed_tests"": [""builtins.BookManagementTestAddBook.test_add_book_1"", ""builtins.BookManagementTestAddBook.test_add_book_2"", ""builtins.BookManagementTestAddBook.test_add_book_3"", ""builtins.BookManagementTestAddBook.test_add_book_4"", ""builtins.BookManagementTestAddBook.test_add_book_5"", ""builtins.BookManagementTestMain.test_main"", ""builtins.BookManagementTestRemoveBook.test_remove_book_1"", ""builtins.BookManagementTestRemoveBook.test_remove_book_2"", ""builtins.BookManagementTestRemoveBook.test_remove_book_3"", ""builtins.BookManagementTestRemoveBook.test_remove_book_4"", ""builtins.BookManagementTestRemoveBook.test_remove_book_5"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_1"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_2"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_3"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_4"", ""builtins.BookManagementTestViewBookQuantity.test_view_book_quantity_5"", ""builtins.BookManagementTestViewInventory.test_view_inventory_1"", ""builtins.BookManagementTestViewInventory.test_view_inventory_2"", ""builtins.BookManagementTestViewInventory.test_view_inventory_3"", ""builtins.BookManagementTestViewInventory.test_view_inventory_4"", ""builtins.BookManagementTestViewInventory.test_view_inventory_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,5450,2776,34.34717345237732

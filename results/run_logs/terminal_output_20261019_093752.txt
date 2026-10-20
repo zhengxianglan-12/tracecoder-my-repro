@@ -1,0 +1,14 @@
+✅ 本次运行日志将自动保存至: results/run_logs/terminal_output_20261019_093752.txt
+✅ 运行元数据已成功保存至: results/run_logs/run_meta_classeval_deepseek-chat_20261019_093752.json
+--- Experiment Start: classeval_deepseek-chat_20261019_093752 ---
+Arguments: {'model': 'deepseek-chat', 'dataset': 'classeval', 'no_instrumentation': False, 'no_two_step_repair': False, 'start_index': 15, 'max_problems': 1, 'max_debug_attempts': 5, 'max_no_improvement_streak': 2, 'timeout': 10, 'output_file': 'results/retest_ClassEval_15.csv'}
+
+========================= Processing problem: ClassEval_15 =========================
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Direct generation failed, entering self-debugging phase.
+--- Debug attempt: 1/5 | Best: 15/16 ---
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+Candidate repair result: All tests passed.
+Problem ClassEval_15 processing completed. Final result: Passed

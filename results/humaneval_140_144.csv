@@ -1,0 +1,176 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+HumanEval/140,deepseek-chat,humaneval,True,True,"import re
+
+def fix_spaces(text):
+    """"""
+    Given a string text, replace all spaces in it with underscores, 
+    and if a string has more than 2 consecutive spaces, 
+    then replace all consecutive spaces with - 
+    """"""
+    # First, replace sequences of 3+ spaces with a single hyphen
+    text = re.sub(r' {3,}', '-', text)
+    # Then, replace remaining single spaces with underscores
+    text = re.sub(r' ', '_', text)
+    return text","{""task_id"": ""HumanEval/140"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 5, ""failed_count"": 0, ""total_count"": 5}",True,"import re
+
+def fix_spaces(text):
+    """"""
+    Given a string text, replace all spaces in it with underscores, 
+    and if a string has more than 2 consecutive spaces, 
+    then replace all consecutive spaces with - 
+    """"""
+    # First, replace sequences of 3+ spaces with a single hyphen
+    text = re.sub(r' {3,}', '-', text)
+    # Then, replace remaining single spaces with underscores
+    text = re.sub(r' ', '_', text)
+    return text","{""task_id"": ""HumanEval/140"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 5, ""failed_count"": 0, ""total_count"": 5}",True,Passed on direct generation,122,376,15.714338064193726
+HumanEval/141,deepseek-chat,humaneval,True,True,"def file_name_check(file_name):
+    # Check if there is exactly one dot
+    if file_name.count('.') != 1:
+        return 'No'
+    
+    # Split the file name into name and extension
+    parts = file_name.split('.')
+    name = parts[0]
+    extension = parts[1]
+    
+    # Check if the name part is not empty
+    if not name:
+        return 'No'
+    
+    # Check if the name starts with a latin alphabet letter
+    if not name[0].isalpha():
+        return 'No'
+    
+    # Check if there are no more than three digits in the file name
+    digit_count = sum(1 for char in file_name if char.isdigit())
+    if digit_count > 3:
+        return 'No'
+    
+    # Check if the extension is one of the valid ones
+    if extension not in ['txt', 'exe', 'dll']:
+        return 'No'
+    
+    return 'Yes'","{""task_id"": ""HumanEval/141"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 26, ""failed_count"": 0, ""total_count"": 26}",True,"def file_name_check(file_name):
+    # Check if there is exactly one dot
+    if file_name.count('.') != 1:
+        return 'No'
+    
+    # Split the file name into name and extension
+    parts = file_name.split('.')
+    name = parts[0]
+    extension = parts[1]
+    
+    # Check if the name part is not empty
+    if not name:
+        return 'No'
+    
+    # Check if the name starts with a latin alphabet letter
+    if not name[0].isalpha():
+        return 'No'
+    
+    # Check if there are no more than three digits in the file name
+    digit_count = sum(1 for char in file_name if char.isdigit())
+    if digit_count > 3:
+        return 'No'
+    
+    # Check if the extension is one of the valid ones
+    if extension not in ['txt', 'exe', 'dll']:
+        return 'No'
+    
+    return 'Yes'","{""task_id"": ""HumanEval/141"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 26, ""failed_count"": 0, ""total_count"": 26}",True,Passed on direct generation,228,322,14.728582382202148
+HumanEval/142,deepseek-chat,humaneval,True,True,"def sum_squares(lst):
+    """"""
+    This function will take a list of integers. For all entries in the list, the function shall square the integer entry if its index is a 
+    multiple of 3 and will cube the integer entry if its index is a multiple of 4 and not a multiple of 3. The function will not 
+    change the entries in the list whose indexes are not a multiple of 3 or 4. The function shall then return the sum of all entries. 
+    
+    Examples:
+    For lst = [1,2,3] the output should be 6
+    For lst = []  the output should be 0
+    For lst = [-1,-5,2,-1,-5]  the output should be -126
+    """"""
+    total = 0
+    
+    for i, val in enumerate(lst):
+        if i % 3 == 0:
+            # Square the value if index is multiple of 3
+            total += val ** 2
+        elif i % 4 == 0:
+            # Cube the value if index is multiple of 4 (and not multiple of 3)
+            total += val ** 3
+        else:
+            # Keep the value unchanged
+            total += val
+    
+    return total","{""task_id"": ""HumanEval/142"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 11, ""failed_count"": 0, ""total_count"": 11}",True,"def sum_squares(lst):
+    """"""
+    This function will take a list of integers. For all entries in the list, the function shall square the integer entry if its index is a 
+    multiple of 3 and will cube the integer entry if its index is a multiple of 4 and not a multiple of 3. The function will not 
+    change the entries in the list whose indexes are not a multiple of 3 or 4. The function shall then return the sum of all entries. 
+    
+    Examples:
+    For lst = [1,2,3] the output should be 6
+    For lst = []  the output should be 0
+    For lst = [-1,-5,2,-1,-5]  the output should be -126
+    """"""
+    total = 0
+    
+    for i, val in enumerate(lst):
+        if i % 3 == 0:
+            # Square the value if index is multiple of 3
+            total += val ** 2
+        elif i % 4 == 0:
+            # Cube the value if index is multiple of 4 (and not multiple of 3)
+            total += val ** 3
+        else:
+            # Keep the value unchanged
+            total += val
+    
+    return total","{""task_id"": ""HumanEval/142"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 11, ""failed_count"": 0, ""total_count"": 11}",True,Passed on direct generation,181,638,16.240001916885376
+HumanEval/143,deepseek-chat,humaneval,True,True,"def words_in_sentence(sentence):
+    def is_prime(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n ** 0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
+
+    words = sentence.split()
+    result = [word for word in words if is_prime(len(word))]
+    return "" "".join(result)","{""task_id"": ""HumanEval/143"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,"def words_in_sentence(sentence):
+    def is_prime(n):
+        if n < 2:
+            return False
+        for i in range(2, int(n ** 0.5) + 1):
+            if n % i == 0:
+                return False
+        return True
+
+    words = sentence.split()
+    result = [word for word in words if is_prime(len(word))]
+    return "" "".join(result)","{""task_id"": ""HumanEval/143"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,Passed on direct generation,161,109,13.71596908569336
+HumanEval/144,deepseek-chat,humaneval,True,True,"def simplify(x, n):
+    # Parse the fractions
+    x_num, x_den = map(int, x.split('/'))
+    n_num, n_den = map(int, n.split('/'))
+    
+    # Multiply the fractions
+    result_num = x_num * n_num
+    result_den = x_den * n_den
+    
+    # Check if the result is a whole number
+    # A fraction is a whole number if numerator is divisible by denominator
+    return result_num % result_den == 0","{""task_id"": ""HumanEval/144"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 13, ""failed_count"": 0, ""total_count"": 13}",True,"def simplify(x, n):
+    # Parse the fractions
+    x_num, x_den = map(int, x.split('/'))
+    n_num, n_den = map(int, n.split('/'))
+    
+    # Multiply the fractions
+    result_num = x_num * n_num
+    result_den = x_den * n_den
+    
+    # Check if the result is a whole number
+    # A fraction is a whole number if numerator is divisible by denominator
+    return result_num % result_den == 0","{""task_id"": ""HumanEval/144"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 13, ""failed_count"": 0, ""total_count"": 13}",True,Passed on direct generation,168,402,15.3963782787323

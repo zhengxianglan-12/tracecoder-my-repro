@@ -1,0 +1,152 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+HumanEval/148,deepseek-chat,humaneval,True,True,"def bf(planet1, planet2):
+    '''
+    There are eight planets in our solar system: the closerst to the Sun 
+    is Mercury, the next one is Venus, then Earth, Mars, Jupiter, Saturn, 
+    Uranus, Neptune.
+    Write a function that takes two planet names as strings planet1 and planet2. 
+    The function should return a tuple containing all planets whose orbits are 
+    located between the orbit of planet1 and the orbit of planet2, sorted by 
+    the proximity to the sun. 
+    The function should return an empty tuple if planet1 or planet2
+    are not correct planet names. 
+    Examples
+    bf(""Jupiter"", ""Neptune"") ==> (""Saturn"", ""Uranus"")
+    bf(""Earth"", ""Mercury"") ==> (""Venus"")
+    bf(""Mercury"", ""Uranus"") ==> (""Venus"", ""Earth"", ""Mars"", ""Jupiter"", ""Saturn"")
+    '''
+    # Define the planets in order from sun
+    planets = (""Mercury"", ""Venus"", ""Earth"", ""Mars"", ""Jupiter"", ""Saturn"", ""Uranus"", ""Neptune"")
+    
+    # Check if both planet names are valid
+    if planet1 not in planets or planet2 not in planets:
+        return ()
+    
+    # Find the indices of the two planets
+    index1 = planets.index(planet1)
+    index2 = planets.index(planet2)
+    
+    # Determine the range of indices between the two planets
+    start = min(index1, index2) + 1
+    end = max(index1, index2)
+    
+    # Return the planets in that range as a tuple
+    return planets[start:end]","{""task_id"": ""HumanEval/148"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,"def bf(planet1, planet2):
+    '''
+    There are eight planets in our solar system: the closerst to the Sun 
+    is Mercury, the next one is Venus, then Earth, Mars, Jupiter, Saturn, 
+    Uranus, Neptune.
+    Write a function that takes two planet names as strings planet1 and planet2. 
+    The function should return a tuple containing all planets whose orbits are 
+    located between the orbit of planet1 and the orbit of planet2, sorted by 
+    the proximity to the sun. 
+    The function should return an empty tuple if planet1 or planet2
+    are not correct planet names. 
+    Examples
+    bf(""Jupiter"", ""Neptune"") ==> (""Saturn"", ""Uranus"")
+    bf(""Earth"", ""Mercury"") ==> (""Venus"")
+    bf(""Mercury"", ""Uranus"") ==> (""Venus"", ""Earth"", ""Mars"", ""Jupiter"", ""Saturn"")
+    '''
+    # Define the planets in order from sun
+    planets = (""Mercury"", ""Venus"", ""Earth"", ""Mars"", ""Jupiter"", ""Saturn"", ""Uranus"", ""Neptune"")
+    
+    # Check if both planet names are valid
+    if planet1 not in planets or planet2 not in planets:
+        return ()
+    
+    # Find the indices of the two planets
+    index1 = planets.index(planet1)
+    index2 = planets.index(planet2)
+    
+    # Determine the range of indices between the two planets
+    start = min(index1, index2) + 1
+    end = max(index1, index2)
+    
+    # Return the planets in that range as a tuple
+    return planets[start:end]","{""task_id"": ""HumanEval/148"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,Passed on direct generation,224,527,18.954958200454712
+HumanEval/149,deepseek-chat,humaneval,True,True,"def sorted_list_sum(lst):
+    # Filter out strings with odd lengths
+    even_length_strings = [s for s in lst if len(s) % 2 == 0]
+    
+    # Sort by length first, then alphabetically for same length
+    even_length_strings.sort(key=lambda x: (len(x), x))
+    
+    return even_length_strings","{""task_id"": ""HumanEval/149"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,"def sorted_list_sum(lst):
+    # Filter out strings with odd lengths
+    even_length_strings = [s for s in lst if len(s) % 2 == 0]
+    
+    # Sort by length first, then alphabetically for same length
+    even_length_strings.sort(key=lambda x: (len(x), x))
+    
+    return even_length_strings","{""task_id"": ""HumanEval/149"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,Passed on direct generation,199,425,17.87968897819519
+HumanEval/150,deepseek-chat,humaneval,True,True,"def x_or_y(n, x, y):
+    """"""A simple program which should return the value of x if n is 
+    a prime number and should return the value of y otherwise.
+
+    Examples:
+    for x_or_y(7, 34, 12) == 34
+    for x_or_y(15, 8, 5) == 5
+    
+    """"""
+    if n < 2:
+        return y
+    
+    # Check if n is prime
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return y
+    
+    return x","{""task_id"": ""HumanEval/150"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 10, ""failed_count"": 0, ""total_count"": 10}",True,"def x_or_y(n, x, y):
+    """"""A simple program which should return the value of x if n is 
+    a prime number and should return the value of y otherwise.
+
+    Examples:
+    for x_or_y(7, 34, 12) == 34
+    for x_or_y(15, 8, 5) == 5
+    
+    """"""
+    if n < 2:
+        return y
+    
+    # Check if n is prime
+    for i in range(2, int(n ** 0.5) + 1):
+        if n % i == 0:
+            return y
+    
+    return x","{""task_id"": ""HumanEval/150"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 10, ""failed_count"": 0, ""total_count"": 10}",True,Passed on direct generation,97,329,16.502092361450195
+HumanEval/151,deepseek-chat,humaneval,True,True,"def double_the_difference(lst):
+    '''
+    Given a list of numbers, return the sum of squares of the numbers
+    in the list that are odd. Ignore numbers that are negative or not integers.
+    
+    double_the_difference([1, 3, 2, 0]) == 1 + 9 + 0 + 0 = 10
+    double_the_difference([-1, -2, 0]) == 0
+    double_the_difference([9, -2]) == 81
+    double_the_difference([0]) == 0  
+   
+    If the input list is empty, return 0.
+    '''
+    total = 0
+    for num in lst:
+        if isinstance(num, int) and num >= 0 and num % 2 != 0:
+            total += num ** 2
+    return total","{""task_id"": ""HumanEval/151"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,"def double_the_difference(lst):
+    '''
+    Given a list of numbers, return the sum of squares of the numbers
+    in the list that are odd. Ignore numbers that are negative or not integers.
+    
+    double_the_difference([1, 3, 2, 0]) == 1 + 9 + 0 + 0 = 10
+    double_the_difference([-1, -2, 0]) == 0
+    double_the_difference([9, -2]) == 81
+    double_the_difference([0]) == 0  
+   
+    If the input list is empty, return 0.
+    '''
+    total = 0
+    for num in lst:
+        if isinstance(num, int) and num >= 0 and num % 2 != 0:
+            total += num ** 2
+    return total","{""task_id"": ""HumanEval/151"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,Passed on direct generation,155,196,15.785523653030396
+HumanEval/152,deepseek-chat,humaneval,True,True,"def compare(game, guess):
+    return [abs(g - s) for g, s in zip(game, guess)]","{""task_id"": ""HumanEval/152"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 5, ""failed_count"": 0, ""total_count"": 5}",True,"def compare(game, guess):
+    return [abs(g - s) for g, s in zip(game, guess)]","{""task_id"": ""HumanEval/152"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 5, ""failed_count"": 0, ""total_count"": 5}",True,Passed on direct generation,241,254,16.37687373161316

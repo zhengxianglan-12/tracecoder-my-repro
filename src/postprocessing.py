@@ -62,42 +62,40 @@ def extract_python_code(text: str) -> str:
     """
     Extracts code blocks from text and processes them based on language type.
     It prioritizes extracting the last Python code block that contains a function or class definition.
+    Falls back to any Python code block if none contain def/class.
     """
     pattern = r"```(\w+)\s*?([\s\S]*?)```"
     matches = re.finditer(pattern, text, re.IGNORECASE)
     all_code_blocks = [(m.group(1).lower(), m.group(2).strip()) for m in matches]
 
     if not all_code_blocks:
+        # No code blocks found, return the original text
         return text
 
-    last_suitable_python_block_content = None
-    # Iterate in reverse to find the last suitable Python block
+    # First pass: look for a Python block with def or class
     for lang, block_content in reversed(all_code_blocks):
         if lang in {'python', 'py', 'python3'}:
-            # Check for function or class definitions
             if re.search(r"\b(def|class)\s+[\w_]+\s*[:\(]", block_content):
-                last_suitable_python_block_content = block_content
-                break
+                processed = remove_test_section(block_content)
+                processed = remove_main_block(processed)
+                processed = remove_code_block_markers(processed)
+                return processed.strip()
 
-    if last_suitable_python_block_content:
-        # Process the found Python block
-        processed = remove_test_section(last_suitable_python_block_content)
-        processed = remove_main_block(processed)
-        processed = remove_code_block_markers(processed)
-        return processed.strip()
+    # Second pass: fall back to any Python block (even without def/class)
+    for lang, block_content in reversed(all_code_blocks):
+        if lang in {'python', 'py', 'python3'}:
+            processed = remove_test_section(block_content)
+            processed = remove_main_block(processed)
+            processed = remove_code_block_markers(processed)
+            return processed.strip()
+
+    # Third pass: handle non-Python languages
+    lang_last, content_last = all_code_blocks[-1]
+    if lang_last in {'cpp', 'c++', 'c'}:
+        return remove_main_function_cpp(content_last)
+    elif lang_last == 'go':
+        return remove_main_function_go(content_last)
+    elif lang_last == 'java':
+        return remove_main_function_java(content_last)
     else:
-        # Fallback to the last block if no suitable Python block is found
-        lang_last, content_last = all_code_blocks[-1]
-        if lang_last in {'python', 'py', 'python3'}:
-            # If the last block is Python but didn't meet the criteria, return it as-is (or maybe the whole text?)
-            # Returning the original text as per the original logic
-            return text
-        elif lang_last in {'cpp', 'c++', 'c'}:
-            return remove_main_function_cpp(content_last)
-        elif lang_last == 'go':
-            return remove_main_function_go(content_last)
-        elif lang_last == 'java':
-            return remove_main_function_java(content_last)
-        else:
-            # Return the content of the last block for any other language
-            return content_last
+        return content_last

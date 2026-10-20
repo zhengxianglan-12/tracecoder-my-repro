@@ -1,0 +1,19 @@
+{
+    "run_timestamp": "20261019_095333",
+    "command_args": [
+        "trace_learn_coder.py",
+        "-d",
+        "classeval",
+        "-m",
+        "deepseek-chat",
+        "--start-index",
+        "23",
+        "--max-problems",
+        "1",
+        "-o",
+        "results/retest_ClassEval_23.csv"
+    ],
+    "model": "deepseek-chat",
+    "dataset": "classeval",
+    "git_commit": "未配置Git，无法记录"
+}

@@ -1,0 +1,242 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,debug_session_log,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+ClassEval_17,deepseek-chat,classeval,True,True,"from datetime import datetime, timedelta
+
+class CalendarUtil:
+    """"""
+    This is a class as CalendarUtil that provides functionalities to manage calendar events, schedule appointments, and perform conflict checks.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the calendar with an empty list of events.
+        """"""
+        self.events = []
+
+    def add_event(self, event):
+        """"""
+        Add an event to the calendar.
+        :param event: The event to be added to the calendar,dict.
+        """"""
+        self.events.append(event)
+
+    def remove_event(self, event):
+        """"""
+        Remove an event from the calendar.
+        :param event: The event to be removed from the calendar,dict.
+        """"""
+        if event in self.events:
+            self.events.remove(event)
+
+    def get_events(self, date):
+        """"""
+        Get all events on a given date.
+        :param date: The date to get events for,datetime.
+        :return: A list of events on the given date,list.
+        """"""
+        result = []
+        for event in self.events:
+            event_date = event.get('date')
+            if event_date is None:
+                event_date = event.get('start_time')
+            if event_date is None:
+                continue
+            if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
+                result.append(event)
+        return result
+
+    def is_available(self, start_time, end_time):
+        """"""
+        Check if the calendar is available for a given time slot.
+        :param start_time: The start time of the time slot,datetime.
+        :param end_time: The end time of the time slot,datetime.
+        :return: True if the calendar is available for the given time slot, False otherwise,bool.
+        """"""
+        for event in self.events:
+            event_start = event.get('start_time')
+            event_end = event.get('end_time')
+            if event_start is None or event_end is None:
+                continue
+            if start_time < event_end and end_time > event_start:
+                return False
+        return True
+
+    def get_available_slots(self, date):
+        """"""
+        Get all available time slots on a given date.
+        :param date: The date to get available time slots for,datetime.
+        :return: A list of available time slots on the given date,list.
+        """"""
+        day_start = datetime(date.year, date.month, date.day, 0, 0)
+        day_end = day_start + timedelta(days=1)
+
+        busy = []
+        for event in self.events:
+            event_start = event.get('start_time')
+            event_end = event.get('end_time')
+            if event_start is None or event_end is None:
+                continue
+            if event_start < day_end and event_end > day_start:
+                s = max(event_start, day_start)
+                e = min(event_end, day_end)
+                busy.append((s, e))
+
+        busy.sort(key=lambda x: x[0])
+
+        merged = []
+        for s, e in busy:
+            if merged and s <= merged[-1][1]:
+                if e > merged[-1][1]:
+                    merged[-1] = (merged[-1][0], e)
+            else:
+                merged.append((s, e))
+
+        slots = []
+        current = day_start
+        for s, e in merged:
+            if s > current:
+                slots.append((current, s))
+            if e > current:
+                current = e
+        if current < day_end:
+            slots.append((current, day_end))
+
+        return slots
+
+    def get_upcoming_events(self, num_events):
+        """"""
+        Get the next n upcoming events from a given date.
+        :param num_events: The number of upcoming events to get,int.
+        :return: A list of the next n upcoming events from the given date,list.
+        """"""
+        now = datetime.now()
+        upcoming = []
+        for event in self.events:
+            event_start = event.get('start_time')
+            if event_start is None:
+                event_start = event.get('date')
+            if event_start is None:
+                continue
+            if event_start >= now:
+                upcoming.append((event_start, event))
+        upcoming.sort(key=lambda x: x[0])
+        return [e for _, e in upcoming[:num_events]]","{""passed"": false, ""passed_count"": 24, ""failed_count"": 5, ""total_count"": 29, ""passed_tests"": [""builtins.CalendarTestAddEvent.test_add_event"", ""builtins.CalendarTestAddEvent.test_add_event_2"", ""builtins.CalendarTestAddEvent.test_add_event_3"", ""builtins.CalendarTestAddEvent.test_add_event_4"", ""builtins.CalendarTestAddEvent.test_add_event_5"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots"", ""builtins.CalendarTestGetEvents.test_get_events"", ""builtins.CalendarTestGetEvents.test_get_events_2"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_2"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_3"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_4"", ""builtins.CalendarTestIsAvailable.test_is_available"", ""builtins.CalendarTestIsAvailable.test_is_available_2"", ""builtins.CalendarTestIsAvailable.test_is_available_3"", ""builtins.CalendarTestIsAvailable.test_is_available_4"", ""builtins.CalendarTestIsAvailable.test_is_available_5"", ""builtins.CalendarTestMain.test_main"", ""builtins.CalendarTestRemoveEvent.test_remove_event"", ""builtins.CalendarTestRemoveEvent.test_remove_event_2"", ""builtins.CalendarTestRemoveEvent.test_remove_event_3"", ""builtins.CalendarTestRemoveEvent.test_remove_event_4"", ""builtins.CalendarTestRemoveEvent.test_remove_event_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event_6""], ""failed_tests"": [{""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 298, in test_get_available_slots_2\nAssertionError: 2 != 23\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 304, in test_get_available_slots_3\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 310, in test_get_available_slots_4\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 316, in test_get_available_slots_5\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 351, in test_get_upcoming_events_5\nAssertionError: Lists differ: [] != [{'date': datetime.datetime(2024, 1, 2, 0,[129 chars] 2'}]\n\nSecond list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2024, 1, 2, 0, 0), 'start_time': datetime.datetime(2024, 1, 2, 1, 0), 'end_time': datetime.datetime(2024, 1, 2, 2, 0), 'description': 'New Year 2'}\n\n- []\n+ [{'date': datetime.datetime(2024, 1, 2, 0, 0),\n+   'description': 'New Year 2',\n+   'end_time': datetime.datetime(2024, 1, 2, 2, 0),\n+   'start_time': datetime.datetime(2024, 1, 2, 1, 0)}]\n""}], ""stderr_output"": """", ""result"": null}",False,"from datetime import datetime, timedelta
+
+class CalendarUtil:
+    """"""
+    This is a class as CalendarUtil that provides functionalities to manage calendar events, schedule appointments, and perform conflict checks.
+    """"""
+
+    def __init__(self):
+        """"""
+        Initialize the calendar with an empty list of events.
+        """"""
+        self.events = []
+
+    def add_event(self, event):
+        """"""
+        Add an event to the calendar.
+        :param event: The event to be added to the calendar,dict.
+        """"""
+        self.events.append(event)
+
+    def remove_event(self, event):
+        """"""
+        Remove an event from the calendar.
+        :param event: The event to be removed from the calendar,dict.
+        """"""
+        if event in self.events:
+            self.events.remove(event)
+
+    def get_events(self, date):
+        """"""
+        Get all events on a given date.
+        :param date: The date to get events for,datetime.
+        :return: A list of events on the given date,list.
+        """"""
+        result = []
+        for event in self.events:
+            event_date = event.get('date')
+            if event_date is None:
+                event_date = event.get('start_time')
+            if event_date is None:
+                continue
+            if event_date.year == date.year and event_date.month == date.month and event_date.day == date.day:
+                result.append(event)
+        return result
+
+    def is_available(self, start_time, end_time):
+        """"""
+        Check if the calendar is available for a given time slot.
+        :param start_time: The start time of the time slot,datetime.
+        :param end_time: The end time of the time slot,datetime.
+        :return: True if the calendar is available for the given time slot, False otherwise,bool.
+        """"""
+        for event in self.events:
+            event_start = event.get('start_time')
+            event_end = event.get('end_time')
+            if event_start is None or event_end is None:
+                continue
+            if start_time < event_end and end_time > event_start:
+                return False
+        return True
+
+    def get_available_slots(self, date):
+        """"""
+        Get all available time slots on a given date.
+        :param date: The date to get available time slots for,datetime.
+        :return: A list of available time slots on the given date,list.
+        """"""
+        day_start = datetime(date.year, date.month, date.day, 0, 0)
+        day_end = day_start + timedelta(days=1)
+
+        busy = []
+        for event in self.events:
+            event_start = event.get('start_time')
+            event_end = event.get('end_time')
+            if event_start is None or event_end is None:
+                continue
+            if event_start < day_end and event_end > day_start:
+                s = max(event_start, day_start)
+                e = min(event_end, day_end)
+                busy.append((s, e))
+
+        busy.sort(key=lambda x: x[0])
+
+        merged = []
+        for s, e in busy:
+            if merged and s <= merged[-1][1]:
+                if e > merged[-1][1]:
+                    merged[-1] = (merged[-1][0], e)
+            else:
+                merged.append((s, e))
+
+        slots = []
+        current = day_start
+        for s, e in merged:
+            if s > current:
+                slots.append((current, s))
+            if e > current:
+                current = e
+        if current < day_end:
+            slots.append((current, day_end))
+
+        return slots
+
+    def get_upcoming_events(self, num_events):
+        """"""
+        Get the next n upcoming events from a given date.
+        :param num_events: The number of upcoming events to get,int.
+        :return: A list of the next n upcoming events from the given date,list.
+        """"""
+        now = datetime.now()
+        upcoming = []
+        for event in self.events:
+            event_start = event.get('start_time')
+            if event_start is None:
+                event_start = event.get('date')
+            if event_start is None:
+                continue
+            if event_start >= now:
+                upcoming.append((event_start, event))
+        upcoming.sort(key=lambda x: x[0])
+        return [e for _, e in upcoming[:num_events]]","{""passed"": false, ""passed_count"": 24, ""failed_count"": 5, ""total_count"": 29, ""passed_tests"": [""builtins.CalendarTestAddEvent.test_add_event"", ""builtins.CalendarTestAddEvent.test_add_event_2"", ""builtins.CalendarTestAddEvent.test_add_event_3"", ""builtins.CalendarTestAddEvent.test_add_event_4"", ""builtins.CalendarTestAddEvent.test_add_event_5"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots"", ""builtins.CalendarTestGetEvents.test_get_events"", ""builtins.CalendarTestGetEvents.test_get_events_2"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_2"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_3"", ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_4"", ""builtins.CalendarTestIsAvailable.test_is_available"", ""builtins.CalendarTestIsAvailable.test_is_available_2"", ""builtins.CalendarTestIsAvailable.test_is_available_3"", ""builtins.CalendarTestIsAvailable.test_is_available_4"", ""builtins.CalendarTestIsAvailable.test_is_available_5"", ""builtins.CalendarTestMain.test_main"", ""builtins.CalendarTestRemoveEvent.test_remove_event"", ""builtins.CalendarTestRemoveEvent.test_remove_event_2"", ""builtins.CalendarTestRemoveEvent.test_remove_event_3"", ""builtins.CalendarTestRemoveEvent.test_remove_event_4"", ""builtins.CalendarTestRemoveEvent.test_remove_event_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event_6""], ""failed_tests"": [{""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 298, in test_get_available_slots_2\nAssertionError: 2 != 23\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 304, in test_get_available_slots_3\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 310, in test_get_available_slots_4\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 316, in test_get_available_slots_5\nAssertionError: 1 != 24\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 351, in test_get_upcoming_events_5\nAssertionError: Lists differ: [] != [{'date': datetime.datetime(2024, 1, 2, 0,[129 chars] 2'}]\n\nSecond list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2024, 1, 2, 0, 0), 'start_time': datetime.datetime(2024, 1, 2, 1, 0), 'end_time': datetime.datetime(2024, 1, 2, 2, 0), 'description': 'New Year 2'}\n\n- []\n+ [{'date': datetime.datetime(2024, 1, 2, 0, 0),\n+   'description': 'New Year 2',\n+   'end_time': datetime.datetime(2024, 1, 2, 2, 0),\n+   'start_time': datetime.datetime(2024, 1, 2, 1, 0)}]\n""}], ""stderr_output"": """", ""result"": null}",False,"[{""attempt"": 1, ""plan"": ""# Step 1: Analysis of failures\n\n# Failure A: test_get_available_slots_5\n#   Expected: len(get_available_slots(datetime(2023,1,1))) == 24\n#   Actual:   1 (a single slot spanning the whole day)\n#   Root cause: The test expects the day to be divided into 24 one-hour slots\n#   when there are no events. The current implementation returns a single\n#   free interval (day_start, day_end). The spec (per test) requires\n#   hourly granularity: available slots should be 1-hour blocks.\n#   Fix: When building the final slots list, split each free interval into\n#   consecutive 1-hour chunks (e.g., iterate from current to end in\n#   timedelta(hours=1) steps). This yields 24 slots for an empty day.\n\n# Failure B: test_get_upcoming_events_5\n#   Expected: get_upcoming_events(1) returns the event with\n#             start_time=2024-01-02 01:00 (and date=2024-01-02 00:00)\n#   Actual:   [] because `now = datetime.now()` is 2026-10-19, so no event\n#             is \""upcoming\"" relative to real wall-clock time.\n#   Root cause: The method uses datetime.now() as the reference point, but\n#   the test expects upcoming events relative to a fixed reference (the\n#   events' own dates / a deterministic \""now\""). Since the test data is in\n#   2024 and the machine clock is 2026, nothing qualifies.\n#   Fix: Do not use datetime.now(). Instead, treat \""upcoming\"" as events\n#   sorted by start_time (or date) and return the first num_events in\n#   chronological order. This matches the test expectation that the\n#   earliest event is returned regardless of wall-clock time.\n\n# Step 2: Root causes (summary)\n#   - get_available_slots: missing hourly subdivision of free intervals.\n#   - get_upcoming_events: non-deterministic reference time (datetime.now())\n#     causes all past-dated events to be filtered out.\n\n# Step 3: Lessons from MISTAKES_TO_AVOID\n#   - No prior attempts exist, so no specific pitfalls to avoid. General\n#     lesson: rely on the test expectations (24 slots, deterministic\n#     ordering) rather than wall-clock assumptions. Keep the original\n#     class structure and method signatures intact.\n\n# Step 4: Actionable fix plan (original structure preserved)\n\n# 1. In get_available_slots:\n#    - Keep busy-interval computation and merging as-is.\n#    - Replace the final slot-building loop so that each free interval\n#      (current, s) and (current, day_end) is split into 1-hour chunks:\n#         while current + timedelta(hours=1) <= end:\n#             slots.append((current, current + timedelta(hours=1)))\n#             current += timedelta(hours=1)\n#         if current < end:\n#             slots.append((current, end))\n#    - This produces 24 slots for an empty day and correctly subdivides\n#      free time around events.\n\n# 2. In get_upcoming_events:\n#    - Remove `now = datetime.now()`.\n#    - Collect all events that have a start_time (fallback to date),\n#      sort them by that key, and return the first num_events.\n#    - This makes the method deterministic and matches the test that\n#      expects the earliest event to be returned.\n\n# 3. Remove all debug print statements (they were instrumentation only)\n#    and keep the original docstrings and signatures."", ""eval_result"": {""passed"": false, ""passed_count"": 23, ""failed_count"": 6, ""total_count"": 29, ""passed_tests"": [""builtins.CalendarTestAddEvent.test_add_event"", ""builtins.CalendarTestAddEvent.test_add_event_2"", ""builtins.CalendarTestAddEvent.test_add_event_3"", ""builtins.CalendarTestAddEvent.test_add_event_4"", ""builtins.CalendarTestAddEvent.test_add_event_5"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_2"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_3"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_4"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_5"", ""builtins.CalendarTestGetEvents.test_get_events"", ""builtins.CalendarTestGetEvents.test_get_events_2"", ""builtins.CalendarTestIsAvailable.test_is_available"", ""builtins.CalendarTestIsAvailable.test_is_available_2"", ""builtins.CalendarTestIsAvailable.test_is_available_3"", ""builtins.CalendarTestIsAvailable.test_is_available_4"", ""builtins.CalendarTestIsAvailable.test_is_available_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event"", ""builtins.CalendarTestRemoveEvent.test_remove_event_2"", ""builtins.CalendarTestRemoveEvent.test_remove_event_3"", ""builtins.CalendarTestRemoveEvent.test_remove_event_4"", ""builtins.CalendarTestRemoveEvent.test_remove_event_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event_6""], ""failed_tests"": [{""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 330, in test_get_upcoming_events\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[128 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 23, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 0, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 336, in test_get_upcoming_events_2\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 1, 0), 'end_time': datetime.datetime(2023, 1, 1, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 342, in test_get_upcoming_events_3\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 2, 1, 0), 'end_time': datetime.datetime(2023, 1, 2, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 2, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 2, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 348, in test_get_upcoming_events_4\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 2, 1, 0), 'end_time': datetime.datetime(2023, 1, 2, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 2, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 2, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 357, in test_get_upcoming_events_5\nAssertionError: Lists differ: [{'da[21 chars]e(2023, 1, 1, 0, 0), 'start_time': datetime.da[98 chars]ar'}] != [{'da[21 chars]e(2024, 1, 2, 0, 0), 'start_time': datetime.da[99 chars] 2'}]\n\nFirst differing element 0:\n{'dat[20 chars]e(2023, 1, 1, 0, 0), 'start_time': datetime.da[97 chars]ear'}\n{'dat[20 chars]e(2024, 1, 2, 0, 0), 'start_time': datetime.da[98 chars]r 2'}\n\nDiff is 695 characters long. Set self.maxDiff to None to see it.\n""}, {""name"": ""builtins.CalendarTestMain.test_main"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 381, in test_main\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[128 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 23, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 0, 0)}]\n""}], ""stderr_output"": """", ""result"": null}}, {""attempt"": 2, ""plan"": ""# Step 1: Bug localization (from captured output + instrumented code)\n\n# Bug 1 \u2014 get_available_slots returns 1 slot instead of 24\n#   Evidence:\n#     [get_available_slots] merged=[]\n#     [get_available_slots] slots_count=1\n#     [get_available_slots] slot[0]=(2023-01-01 00:00, 2023-01-02 00:00)\n#     ASSERT-CHECK: empty day slots_count=1 expected=24 match=False\n#   Location: the final slot-building loop in get_available_slots:\n#       current = day_start\n#       for s, e in merged: ...\n#       if current < day_end: slots.append((current, day_end))\n#   Nature: it emits one contiguous free interval for the whole day.\n#   The test expects the day to be discretized into 24 one-hour slots.\n\n# Bug 2 \u2014 get_upcoming_events returns [] for events dated 2024\n#   Evidence:\n#     [get_upcoming_events] now=2026-10-19 09:50:07\n#     [get_upcoming_events] upcoming_sorted=[]\n#     Output: result_count=0\n#   Location: `now = datetime.now()` and the filter `if event_start >= now`.\n#   Nature: reference time is wall-clock, so past-dated events are dropped.\n#   The test expects the earliest event(s) in chronological order,\n#   independent of the machine clock.\n\n# Step 2: Root causes\n#   - get_available_slots: free intervals are not subdivided into\n#     fixed-size (1-hour) slots; the test asserts hourly granularity.\n#   - get_upcoming_events: non-deterministic reference time\n#     (datetime.now()) makes results depend on the host clock, which\n#     is later than the test fixtures, so nothing qualifies as \""upcoming\"".\n\n# Step 3: Lessons from MISTAKES_TO_AVOID (Historical Failed Fix Attempt 1)\n#   - That attempt already identified the same two root causes and\n#     proposed the same two fixes (hourly subdivision + drop datetime.now()).\n#     It still failed 6 tests (23/29). Therefore the two fixes above are\n#     necessary but NOT sufficient. The remaining failures must come from\n#     other methods (add/remove/get_events/is_available) or from edge\n#     cases in the two methods above (e.g., partial-hour remainders,\n#     overlapping/adjacent events, boundary conditions, event key\n#     fallbacks, ordering ties).\n#   - Lesson 1: Do not assume the two visible failures are the only ones.\n#     Apply the two fixes AND audit the other methods against likely\n#     test expectations (exact boundary semantics, key fallbacks,\n#     stable ordering, handling of missing keys).\n#   - Lesson 2: When subdividing into hourly slots, handle the trailing\n#     partial hour explicitly (append remainder if current < end) so\n#     non-aligned events do not silently drop time.\n#   - Lesson 3: For get_upcoming_events, sort by (start_time or date)\n#     with a stable tiebreaker and slice [:num_events]; do not filter\n#     by wall-clock time. Also handle num_events <= 0 gracefully.\n#   - Lesson 4: Keep the original class structure, signatures, and\n#     docstrings; remove all instrumentation prints.\n\n# Step 4: Actionable fix plan (original structure preserved)\n\n# 4.1 get_available_slots(date):\n#     - Compute day_start = datetime(y,m,d,0,0), day_end = day_start + 1 day.\n#     - Build busy intervals from events that have both start_time and\n#       end_time and overlap [day_start, day_end); clip to the day.\n#     - Sort busy by start; merge overlapping/adjacent intervals\n#       (use s <= merged[-1][1] to merge touching intervals).\n#     - Walk merged intervals to produce free intervals, then split each\n#       free interval into 1-hour chunks:\n#           cur = free_start\n#           while cur + timedelta(hours=1) <= free_end:\n#               slots.append((cur, cur + timedelta(hours=1)))\n#               cur += timedelta(hours=1)\n#           if cur < free_end:\n#               slots.append((cur, free_end))\n#     - Empty day => 24 slots of 1 hour each.\n\n# 4.2 get_upcoming_events(num_events):\n#     - Remove `now = datetime.now()`.\n#     - For each event, key = event.get('start_time') or event.get('date');\n#       skip events with no key.\n#     - Sort by key (stable), return first num_events events.\n#     - If num_events <= 0, return [].\n\n# 4.3 Audit other methods for likely test expectations:\n#     - add_event: append as-is (no dedup) \u2014 matches typical tests.\n#     - remove_event: remove first matching occurrence; no-op if absent.\n#     - get_events(date): match by year/month/day using 'date' with\n#       fallback to 'start_time'; skip events lacking both.\n#     - is_available(start,end): conflict iff start < event_end and\n#       end > event_start (half-open overlap); skip events missing\n#       start_time or end_time.\n\n# 4.4 Remove all debug print statements; keep docstrings and signatures."", ""eval_result"": {""passed"": false, ""passed_count"": 23, ""failed_count"": 6, ""total_count"": 29, ""passed_tests"": [""builtins.CalendarTestAddEvent.test_add_event"", ""builtins.CalendarTestAddEvent.test_add_event_2"", ""builtins.CalendarTestAddEvent.test_add_event_3"", ""builtins.CalendarTestAddEvent.test_add_event_4"", ""builtins.CalendarTestAddEvent.test_add_event_5"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_2"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_3"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_4"", ""builtins.CalendarTestGetAvailableSlots.test_get_available_slots_5"", ""builtins.CalendarTestGetEvents.test_get_events"", ""builtins.CalendarTestGetEvents.test_get_events_2"", ""builtins.CalendarTestIsAvailable.test_is_available"", ""builtins.CalendarTestIsAvailable.test_is_available_2"", ""builtins.CalendarTestIsAvailable.test_is_available_3"", ""builtins.CalendarTestIsAvailable.test_is_available_4"", ""builtins.CalendarTestIsAvailable.test_is_available_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event"", ""builtins.CalendarTestRemoveEvent.test_remove_event_2"", ""builtins.CalendarTestRemoveEvent.test_remove_event_3"", ""builtins.CalendarTestRemoveEvent.test_remove_event_4"", ""builtins.CalendarTestRemoveEvent.test_remove_event_5"", ""builtins.CalendarTestRemoveEvent.test_remove_event_6""], ""failed_tests"": [{""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 333, in test_get_upcoming_events\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[128 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 23, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 0, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 339, in test_get_upcoming_events_2\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 1, 0), 'end_time': datetime.datetime(2023, 1, 1, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 345, in test_get_upcoming_events_3\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 2, 1, 0), 'end_time': datetime.datetime(2023, 1, 2, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 2, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 2, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 351, in test_get_upcoming_events_4\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[127 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 2, 1, 0), 'end_time': datetime.datetime(2023, 1, 2, 2, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 2, 2, 0),\n-   'start_time': datetime.datetime(2023, 1, 2, 1, 0)}]\n""}, {""name"": ""builtins.CalendarTestGetUpcomingEvents.test_get_upcoming_events_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 360, in test_get_upcoming_events_5\nAssertionError: Lists differ: [{'da[21 chars]e(2023, 1, 1, 0, 0), 'start_time': datetime.da[98 chars]ar'}] != [{'da[21 chars]e(2024, 1, 2, 0, 0), 'start_time': datetime.da[99 chars] 2'}]\n\nFirst differing element 0:\n{'dat[20 chars]e(2023, 1, 1, 0, 0), 'start_time': datetime.da[97 chars]ear'}\n{'dat[20 chars]e(2024, 1, 2, 0, 0), 'start_time': datetime.da[98 chars]r 2'}\n\nDiff is 695 characters long. Set self.maxDiff to None to see it.\n""}, {""name"": ""builtins.CalendarTestMain.test_main"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 384, in test_main\nAssertionError: Lists differ: [{'date': datetime.datetime(2023, 1, 1, 0,[128 chars]ar'}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'date': datetime.datetime(2023, 1, 1, 0, 0), 'start_time': datetime.datetime(2023, 1, 1, 0, 0), 'end_time': datetime.datetime(2023, 1, 1, 23, 0), 'description': 'New Year'}\n\n+ []\n- [{'date': datetime.datetime(2023, 1, 1, 0, 0),\n-   'description': 'New Year',\n-   'end_time': datetime.datetime(2023, 1, 1, 23, 0),\n-   'start_time': datetime.datetime(2023, 1, 1, 0, 0)}]\n""}], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,16466,9423,60.017951011657715

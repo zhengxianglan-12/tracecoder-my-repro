@@ -3,11 +3,11 @@ import argparse
 # --- Dataset Path Configuration ---
 DATASET_PATHS = {
     "humaneval": {
-        "data_path": "./datasets/human_eval/data/test.jsonl", # Please replace with the actual local path
+        "data_path": "./data/humaneval_test.jsonl", # Please replace with the actual local path
         "eval_module": "datasets.human_eval.execution" # Python import path for the evaluation module
     },
     "humanevalplus": {
-        "data_path": "./datasets/human_eval_plus/data/test-00000-of-00001-5973903632b82d40.parquet", # Please replace with the actual local path
+        "data_path": "./data/humanevalplus_test.jsonl", # Please replace with the actual local path
         "eval_module": "datasets.human_eval.execution" # Python import path for the evaluation module
     },
     "bigcodebench": {
@@ -18,8 +18,9 @@ DATASET_PATHS = {
         "data_path": "./datasets/ClassEval/data/test-00000-of-00001-5c45fa6e45572491.parquet",      # Please replace with the actual local path
         "eval_module": "datasets.ClassEval.evaluation" # Python import path for the evaluation module
     }
-    # Add other datasets here, ensure they have 'data_path' and 'eval_module'
 }
+    # Add other datasets here, ensure they have 'data_path' and 'eval_module'
+
 
 # Note: Please ensure the above paths point to the actual location of your dataset files on your local machine.
 

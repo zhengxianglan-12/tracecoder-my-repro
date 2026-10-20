@@ -1,0 +1,150 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+HumanEval/0,deepseek-chat,humaneval,True,True,"from typing import List
+
+def has_close_elements(numbers: List[float], threshold: float) -> bool:
+    """""" Check if in given list of numbers, are any two numbers closer to each other than
+    given threshold.
+    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)
+    False
+    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)
+    True
+    """"""
+    # Compare each pair of numbers
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            if abs(numbers[i] - numbers[j]) < threshold:
+                return True
+    return False","{""task_id"": ""HumanEval/0"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,"from typing import List
+
+def has_close_elements(numbers: List[float], threshold: float) -> bool:
+    """""" Check if in given list of numbers, are any two numbers closer to each other than
+    given threshold.
+    >>> has_close_elements([1.0, 2.0, 3.0], 0.5)
+    False
+    >>> has_close_elements([1.0, 2.8, 3.0, 4.0, 5.0, 2.0], 0.3)
+    True
+    """"""
+    # Compare each pair of numbers
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            if abs(numbers[i] - numbers[j]) < threshold:
+                return True
+    return False","{""task_id"": ""HumanEval/0"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 7, ""failed_count"": 0, ""total_count"": 7}",True,Passed on direct generation,138,301,16.329655408859253
+HumanEval/1,deepseek-chat,humaneval,True,True,"from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    # Remove spaces from the input string
+    paren_string = paren_string.replace("" "", """")
+    
+    result = []
+    current_group = """"
+    balance = 0
+    
+    for char in paren_string:
+        current_group += char
+        if char == '(':
+            balance += 1
+        elif char == ')':
+            balance -= 1
+        
+        # When balance returns to 0, we have a complete group
+        if balance == 0:
+            result.append(current_group)
+            current_group = """"
+    
+    return result","{""task_id"": ""HumanEval/1"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 4, ""failed_count"": 0, ""total_count"": 4}",True,"from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    # Remove spaces from the input string
+    paren_string = paren_string.replace("" "", """")
+    
+    result = []
+    current_group = """"
+    balance = 0
+    
+    for char in paren_string:
+        current_group += char
+        if char == '(':
+            balance += 1
+        elif char == ')':
+            balance -= 1
+        
+        # When balance returns to 0, we have a complete group
+        if balance == 0:
+            result.append(current_group)
+            current_group = """"
+    
+    return result","{""task_id"": ""HumanEval/1"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 4, ""failed_count"": 0, ""total_count"": 4}",True,Passed on direct generation,131,232,14.398819923400879
+HumanEval/2,deepseek-chat,humaneval,True,True,"def truncate_number(number: float) -> float:
+    """""" Given a positive floating point number, it can be decomposed into
+    and integer part (largest integer smaller than given number) and decimals
+    (leftover part always smaller than 1).
+
+    Return the decimal part of the number.
+    >>> truncate_number(3.5)
+    0.5
+    """"""
+    return number - int(number)","{""task_id"": ""HumanEval/2"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 3, ""failed_count"": 0, ""total_count"": 3}",True,"def truncate_number(number: float) -> float:
+    """""" Given a positive floating point number, it can be decomposed into
+    and integer part (largest integer smaller than given number) and decimals
+    (leftover part always smaller than 1).
+
+    Return the decimal part of the number.
+    >>> truncate_number(3.5)
+    0.5
+    """"""
+    return number - int(number)","{""task_id"": ""HumanEval/2"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 3, ""failed_count"": 0, ""total_count"": 3}",True,Passed on direct generation,96,226,14.490725040435791
+HumanEval/3,deepseek-chat,humaneval,True,True,"from typing import List
+
+def below_zero(operations: List[int]) -> bool:
+    balance = 0
+    for op in operations:
+        balance += op
+        if balance < 0:
+            return True
+    return False","{""task_id"": ""HumanEval/3"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 6, ""failed_count"": 0, ""total_count"": 6}",True,"from typing import List
+
+def below_zero(operations: List[int]) -> bool:
+    balance = 0
+    for op in operations:
+        balance += op
+        if balance < 0:
+            return True
+    return False","{""task_id"": ""HumanEval/3"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 6, ""failed_count"": 0, ""total_count"": 6}",True,Passed on direct generation,129,62,13.50419569015503
+HumanEval/4,deepseek-chat,humaneval,True,True,"from typing import List
+
+def mean_absolute_deviation(numbers: List[float]) -> float:
+    """""" For a given list of input numbers, calculate Mean Absolute Deviation
+    around the mean of this dataset.
+    Mean Absolute Deviation is the average absolute difference between each
+    element and a centerpoint (mean in this case):
+    MAD = average | x - x_mean |
+    >>> mean_absolute_deviation([1.0, 2.0, 3.0, 4.0])
+    1.0
+    """"""
+    if not numbers:
+        return 0.0
+    
+    mean = sum(numbers) / len(numbers)
+    absolute_deviations = [abs(x - mean) for x in numbers]
+    mad = sum(absolute_deviations) / len(numbers)
+    
+    return mad","{""task_id"": ""HumanEval/4"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 3, ""failed_count"": 0, ""total_count"": 3}",True,"from typing import List
+
+def mean_absolute_deviation(numbers: List[float]) -> float:
+    """""" For a given list of input numbers, calculate Mean Absolute Deviation
+    around the mean of this dataset.
+    Mean Absolute Deviation is the average absolute difference between each
+    element and a centerpoint (mean in this case):
+    MAD = average | x - x_mean |
+    >>> mean_absolute_deviation([1.0, 2.0, 3.0, 4.0])
+    1.0
+    """"""
+    if not numbers:
+        return 0.0
+    
+    mean = sum(numbers) / len(numbers)
+    absolute_deviations = [abs(x - mean) for x in numbers]
+    mad = sum(absolute_deviations) / len(numbers)
+    
+    return mad","{""task_id"": ""HumanEval/4"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 3, ""failed_count"": 0, ""total_count"": 3}",True,Passed on direct generation,127,409,15.106098413467407

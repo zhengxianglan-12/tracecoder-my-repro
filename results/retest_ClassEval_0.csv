@@ -1,0 +1,186 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,debug_session_log,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+ClassEval_0,deepseek-chat,classeval,True,True,"import logging
+import datetime
+
+class AccessGatewayFilter:
+    """"""
+    This class is a filter used for accessing gateway filtering, primarily for authentication and access log recording.
+    """"""
+
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.current_user_info = None
+
+    def filter(self, request):
+        """"""
+        Filter the incoming request based on certain rules and conditions.
+        :param request: dict, the incoming request details
+        :return: bool, True if the request is allowed, False otherwise
+        """"""
+        if not isinstance(request, dict):
+            return False
+
+        path = request.get('path', '')
+        if not self.is_start_with(path):
+            return True
+
+        user = self.get_jwt_user(request)
+        if user is None:
+            return False
+
+        self.set_current_user_info_and_log(user)
+        return True
+
+    def is_start_with(self, request_uri):
+        """"""
+        Check if the request URI starts with certain prefixes.
+        Currently, the prefixes being checked are ""/api"" and ""/login"".
+        :param request_uri: str, the URI of the request
+        :return: bool, True if the URI starts with certain prefixes, False otherwise
+        """"""
+        if not isinstance(request_uri, str):
+            return False
+        return request_uri.startswith('/api') or request_uri.startswith('/login')
+
+    def get_jwt_user(self, request):
+        """"""
+        Get the user information from the JWT token in the request.
+        :param request: dict, the incoming request details
+        :return: dict or None, the user information if the token is valid, None otherwise
+        """"""
+        if not isinstance(request, dict):
+            return None
+
+        headers = request.get('headers')
+        if not isinstance(headers, dict):
+            return None
+
+        auth = headers.get('Authorization')
+        if not isinstance(auth, dict):
+            return None
+
+        user = auth.get('user')
+        jwt = auth.get('jwt')
+        if not isinstance(user, dict) or not isinstance(jwt, str):
+            return None
+
+        name = user.get('name')
+        if not isinstance(name, str):
+            return None
+
+        expected_jwt = name + str(datetime.date.today())
+        if jwt != expected_jwt:
+            return None
+
+        return user
+
+    def set_current_user_info_and_log(self, user):
+        """"""
+        Set the current user information and log the access.
+        :param user: dict, the user information
+        :return: None
+        """"""
+        if not isinstance(user, dict):
+            return
+
+        self.current_user_info = user
+        name = user.get('name', 'unknown')
+        address = user.get('address', 'unknown')
+        self.logger.info(
+            ""Access by user %s from %s at %s"",
+            name,
+            address,
+            datetime.datetime.now().isoformat(),
+        )","{""passed"": false, ""passed_count"": 12, ""failed_count"": 7, ""total_count"": 19, ""passed_tests"": [""builtins.AccessGatewayFilterTestFilter.test_filter_5"", ""builtins.AccessGatewayFilterTestFilter.test_filter_8"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_1"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_2"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_3"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_4"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_5"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_1"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_2"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_3"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_4"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_5""], ""failed_tests"": [{""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_1"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 102, in test_filter_1\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 108, in test_filter_2\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 114, in test_filter_3\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 120, in test_filter_4\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_6"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 138, in test_filter_6\nAssertionError: True is not false\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_7"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 147, in test_filter_7\nAssertionError: True is not None\n""}, {""name"": ""builtins.AccessGatewayFilterTest.test_AccessGatewayFilter"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 233, in test_AccessGatewayFilter\nAssertionError: False is not true\n""}], ""stderr_output"": """", ""result"": null}",False,"import logging
+import datetime
+
+class AccessGatewayFilter:
+    """"""
+    This class is a filter used for accessing gateway filtering, primarily for authentication and access log recording.
+    """"""
+
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.current_user_info = None
+
+    def filter(self, request):
+        """"""
+        Filter the incoming request based on certain rules and conditions.
+        :param request: dict, the incoming request details
+        :return: bool, True if the request is allowed, False otherwise
+        """"""
+        if not isinstance(request, dict):
+            return False
+
+        path = request.get('path', '')
+        if not self.is_start_with(path):
+            return True
+
+        user = self.get_jwt_user(request)
+        if user is None:
+            return False
+
+        self.set_current_user_info_and_log(user)
+        return True
+
+    def is_start_with(self, request_uri):
+        """"""
+        Check if the request URI starts with certain prefixes.
+        Currently, the prefixes being checked are ""/api"" and ""/login"".
+        :param request_uri: str, the URI of the request
+        :return: bool, True if the URI starts with certain prefixes, False otherwise
+        """"""
+        if not isinstance(request_uri, str):
+            return False
+        return request_uri.startswith('/api') or request_uri.startswith('/login')
+
+    def get_jwt_user(self, request):
+        """"""
+        Get the user information from the JWT token in the request.
+        :param request: dict, the incoming request details
+        :return: dict or None, the user information if the token is valid, None otherwise
+        """"""
+        if not isinstance(request, dict):
+            return None
+
+        headers = request.get('headers')
+        if not isinstance(headers, dict):
+            return None
+
+        auth = headers.get('Authorization')
+        if not isinstance(auth, dict):
+            return None
+
+        user = auth.get('user')
+        jwt = auth.get('jwt')
+        if not isinstance(user, dict) or not isinstance(jwt, str):
+            return None
+
+        name = user.get('name')
+        if not isinstance(name, str):
+            return None
+
+        expected_jwt = name + str(datetime.date.today())
+        if jwt != expected_jwt:
+            return None
+
+        return user
+
+    def set_current_user_info_and_log(self, user):
+        """"""
+        Set the current user information and log the access.
+        :param user: dict, the user information
+        :return: None
+        """"""
+        if not isinstance(user, dict):
+            return
+
+        self.current_user_info = user
+        name = user.get('name', 'unknown')
+        address = user.get('address', 'unknown')
+        self.logger.info(
+            ""Access by user %s from %s at %s"",
+            name,
+            address,
+            datetime.datetime.now().isoformat(),
+        )","{""passed"": false, ""passed_count"": 12, ""failed_count"": 7, ""total_count"": 19, ""passed_tests"": [""builtins.AccessGatewayFilterTestFilter.test_filter_5"", ""builtins.AccessGatewayFilterTestFilter.test_filter_8"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_1"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_2"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_3"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_4"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_5"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_1"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_2"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_3"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_4"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_5""], ""failed_tests"": [{""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_1"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 102, in test_filter_1\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 108, in test_filter_2\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 114, in test_filter_3\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 120, in test_filter_4\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_6"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 138, in test_filter_6\nAssertionError: True is not false\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_7"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 147, in test_filter_7\nAssertionError: True is not None\n""}, {""name"": ""builtins.AccessGatewayFilterTest.test_AccessGatewayFilter"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 233, in test_AccessGatewayFilter\nAssertionError: False is not true\n""}], ""stderr_output"": """", ""result"": null}",False,"[{""attempt"": 1, ""plan"": ""# Analysis of failures:\n\n# Bug 1: test_filter_4 fails with \""False is not true\""\n# Looking at the test output, the request path is likely \""/api/...\"" or \""/login/...\""\n# but the JWT validation is failing. The expected_jwt is computed as:\n#   expected_jwt = name + str(datetime.date.today())\n# The test likely uses a JWT that matches the expected format, but the\n# comparison fails. The issue: the test probably expects the JWT to be\n# validated against the user's name + today's date, but the test data\n# may use a different date format or the test expects a different\n# validation logic. Actually, looking more carefully - the test_filter_4\n# expects True but gets False. This means the JWT check is too strict\n# or the path check is wrong.\n\n# Bug 2: test_filter_6 fails with \""True is not false\""\n# Request: path='/abc', with valid-looking Authorization header\n# Expected: False, but got True\n# The path '/abc' does NOT start with '/api' or '/login', so filter\n# returns True (allowed). But the test expects False.\n# This means the filter logic is INVERTED or the is_start_with logic\n# is wrong. The test expects that paths NOT starting with protected\n# prefixes should be REJECTED (return False), OR the filter should\n# return None for non-protected paths.\n\n# Bug 3: test_filter_7 fails with \""True is not None\""\n# Request: path='/abc', with jwt='user12026-10-19' (wrong year)\n# Expected: None, but got True\n# Again, path '/abc' doesn't start with protected prefix, so filter\n# returns True. But test expects None.\n\n# Root cause analysis:\n# The filter method's logic for non-protected paths is wrong.\n# Looking at test_filter_6 and test_filter_7:\n#   - test_filter_6: path='/abc', expects False\n#   - test_filter_7: path='/abc', expects None\n# \n# This suggests the filter should return None (or False) for paths\n# that don't start with protected prefixes, NOT True.\n# \n# Wait - test_filter_6 expects False, test_filter_7 expects None.\n# These are different expectations for similar inputs. The difference\n# must be in the JWT. test_filter_6 has jwt='user12025-10-19' (valid date),\n# test_filter_7 has jwt='user12026-10-19' (invalid date).\n# \n# So the logic should be:\n#   - If path doesn't start with protected prefix: return None (or False)\n#   - Actually, looking at typical gateway filter patterns:\n#     - Non-protected paths should be allowed (True) OR\n#     - The filter returns None for paths that don't need auth\n#\n# Given test_filter_6 expects False and test_filter_7 expects None:\n#   - test_filter_6: valid JWT but non-protected path -> False\n#   - test_filter_7: invalid JWT and non-protected path -> None\n#\n# This suggests: the filter should ALWAYS validate JWT if present,\n# and return None if JWT is invalid, False if JWT is valid but path\n# is not protected (or some other logic).\n#\n# Actually, re-reading: test_filter_6 has valid JWT (user12025-10-19\n# matches user1 + 2025-10-19), expects False. test_filter_7 has invalid\n# JWT (user12026-10-19 doesn't match user1 + today), expects None.\n#\n# So the logic might be:\n#   - If path doesn't start with protected prefix:\n#     - If JWT is valid: return False (or some rejection)\n#     - If JWT is invalid: return None\n#\n# OR more likely: the filter should return None when path is not\n# protected AND JWT is invalid, and False when path is not protected\n# but JWT is valid (meaning the user is authenticated but accessing\n# a non-protected resource - maybe should be rejected?).\n#\n# Actually, the most common pattern for this type of problem:\n#   - filter returns True if request is allowed\n#   - filter returns False if request is denied\n#   - filter returns None if request is not applicable (not protected)\n#\n# But test_filter_6 expects False for non-protected path with valid JWT.\n# This is unusual. Let me reconsider.\n#\n# Perhaps the logic is:\n#   - If path starts with protected prefix: validate JWT, return True/False\n#   - If path doesn't start with protected prefix: \n#     - Still validate JWT if present\n#     - If JWT invalid: return None\n#     - If JWT valid: return False (deny access to non-protected? unusual)\n#\n# OR the test expectations are:\n#   - test_filter_6: path='/abc', valid JWT -> expects False\n#   - test_filter_7: path='/abc', invalid JWT -> expects None\n#\n# This suggests: for non-protected paths, if JWT is valid, return False;\n# if JWT is invalid, return None. This is strange but let's go with it.\n#\n# Actually, a more sensible interpretation:\n#   - The filter should return None for paths that don't need filtering\n#   - But test_filter_6 expects False...\n#\n# Let me reconsider: maybe the issue is that the filter should check\n# JWT FIRST, then path. If JWT is invalid, return None. If JWT is valid\n# but path is not protected, return False (or True?).\n#\n# Given the failures:\n#   - test_filter_4: expects True, got False (protected path, valid JWT?)\n#   - test_filter_6: expects False, got True (non-protected path, valid JWT)\n#   - test_filter_7: expects None, got True (non-protected path, invalid JWT)\n#\n# The fix should be:\n#   1. For test_filter_4: the JWT validation is failing when it shouldn't.\n#      The expected_jwt uses datetime.date.today() but the test might use\n#      a fixed date. The test data shows 'user12025-10-19' which suggests\n#      the test is using a specific date. The issue might be that the\n#      test expects the JWT to be validated differently, or the date\n#      format is different.\n#   \n#   Actually, looking at test_filter_6: jwt='user12025-10-19'. If today\n#   is 2025-10-19, then expected_jwt = 'user1' + '2025-10-19' = 'user12025-10-19'.\n#   This matches! So the JWT is valid in test_filter_6.\n#   \n#   For test_filter_7: jwt='user12026-10-19'. expected_jwt would be\n#   'user1' + today's date. If today is 2025-10-19, expected is 'user12025-10-19',\n#   which doesn't match 'user12026-10-19'. So JWT is invalid.\n#\n#   So the logic should be:\n#   - If path starts with protected prefix:\n#     - Validate JWT: if valid return True, else return False\n#   - If path doesn't start with protected prefix:\n#     - Validate JWT: if valid return False, else return None\n#\n#   Wait, that doesn't make sense either. Let me think again.\n#\n#   Actually, the most likely correct logic based on test expectations:\n#   - filter returns True: request allowed (protected path + valid JWT)\n#   - filter returns False: request denied (protected path + invalid JWT,\n#     OR non-protected path + valid JWT?)\n#   - filter returns None: request not applicable (non-protected path + invalid JWT?)\n#\n#   Hmm, this is getting complex. Let me look at the test names:\n#   test_filter_4, test_filter_6, test_filter_7\n#\n#   A simpler interpretation: the filter should return None for\n#   non-protected paths (not True). And for test_filter_6, maybe\n#   the path IS protected but the JWT check fails?\n#\n#   Wait, test_filter_6 shows path='/abc' which is NOT protected.\n#   But it expects False. This is contradictory with \""return None for\n#   non-protected paths\"".\n#\n#   Let me re-read: test_filter_6 expects False, test_filter_7 expects None.\n#   Both have path='/abc'. The difference is JWT validity.\n#   test_filter_6: valid JWT -> False\n#   test_filter_7: invalid JWT -> None\n#\n#   So: non-protected path + valid JWT -> False\n#       non-protected path + invalid JWT -> None\n#\n#   This means: the filter ALWAYS validates JWT. If JWT is invalid,\n#   return None (regardless of path). If JWT is valid:\n#     - protected path -> True\n#     - non-protected path -> False\n#\n#   Let me verify with test_filter_4: expects True. This should be\n#   protected path + valid JWT. The failure \""False is not true\"" means\n#   the JWT validation failed when it shouldn't have. This could be\n#   a date issue - maybe the test uses a hardcoded date that doesn't\n#   match today's date.\n#\n#   Looking at the test data in test_filter_6: jwt='user12025-10-19'.\n#   This suggests the test is using 2025-10-19 as \""today\"". If the actual\n#   today is different, the JWT validation would fail.\n#\n#   But wait - test_filter_6 shows the JWT as 'user12025-10-19' and\n#   the test expects False (not None), which means the JWT was considered\n#   VALID (since invalid JWT would return None per test_filter_7).\n#   So the JWT validation passed in test_filter_6, meaning today IS 2025-10-19\n#   in the test environment.\n#\n#   So for test_filter_4, the JWT should also be valid if it's 'user1' + '2025-10-19'.\n#   But it failed. Maybe test_filter_4 uses a different user or different JWT format.\n#\n#   Without seeing test_filter_4's input, I'll assume the JWT validation\n#   logic needs to be more lenient or the date handling needs adjustment.\n#\n#   Actually, looking more carefully at the error for test_filter_4:\n#   \""AssertionError: False is not true\"" at line 149.\n#   This means filter returned False but test expected True.\n#   This could be because:\n#   1. Path is protected but JWT validation failed\n#   2. Path is not protected (returns False per new logic) but test expected True\n#\n#   If test_filter_4 has a protected path and valid JWT, it should return True.\n#   The failure suggests JWT validation failed. Possible reasons:\n#   - The JWT in test_filter_4 doesn't match name + today's date\n#   - Maybe the test uses a different date format or the JWT is constructed differently\n#\n#   Given the complexity, let me propose a fix that addresses the clear bugs:\n#   1. For non-protected paths: validate JWT first\n#      - If JWT invalid: return None\n#      - If JWT valid: return False\n#   2. For protected paths: validate JWT\n#      - If JWT valid: return True\n#      - If JWT invalid: return False\n#\n#   This matches test_filter_6 (non-protected, valid JWT -> False) and\n#   test_filter_7 (non-protected, invalid JWT -> None).\n#\n#   For test_filter_4, if it's a protected path with valid JWT, it should\n#   return True. The failure might be due to the JWT validation logic.\n#   Let me check: the current code computes expected_jwt = name + str(datetime.date.today()).\n#   If the test uses a different date (e.g., hardcoded), this would fail.\n#   But test_filter_6 shows the JWT matches today's date, so the date logic\n#   seems correct for that test.\n#\n#   Maybe test_filter_4 has a different issue - perhaps the path is not\n#   protected but the test expects True? That would contradict test_filter_6.\n#\n#   Without more info, I'll focus on the clear fix: change the non-protected\n#   path handling to validate JWT and return False/None accordingly.\n\n# Proposed fix:\n\ndef filter(self, request):\n    if not isinstance(request, dict):\n        return False\n\n    path = request.get('path', '')\n    \n    # Always try to get JWT user\n    user = self.get_jwt_user(request)\n    \n    if self.is_start_with(path):\n        # Protected path\n        if user is None:\n            return False\n        self.set_current_user_info_and_log(user)\n        return True\n    else:\n        # Non-protected path\n        if user is None:\n            return None\n        return False\n\n# Wait, but test_filter_4 expects True and got False. If test_filter_4\n# has a protected path and valid JWT, the above logic would return True.\n# The failure suggests JWT validation failed. Let me check if there's\n# an issue with the JWT validation itself.\n#\n# Looking at get_jwt_user: it checks if auth is a dict, then gets user and jwt.\n# It checks if user is dict and jwt is str. Then checks name is str.\n# Then computes expected_jwt = name + str(datetime.date.today()).\n# If jwt != expected_jwt, returns None.\n#\n# This seems correct. But maybe the test uses a different date format?\n# Or maybe the test expects the JWT to be validated differently?\n#\n# Actually, looking at the test data: jwt='user12025-10-19'. \n# str(datetime.date.today()) would be '2025-10-19' if today is that date.\n# So expected_jwt = 'user1' + '2025-10-19' = 'user12025-10-19'. This matches.\n#\n# So the JWT validation should work for test_filter_6. And it did (returned False, not None).\n#\n# For test_filter_4, maybe the issue is different. Let me assume test_filter_4\n# has a protected path but the JWT is somehow different. Without the test code,\n# I'll assume the fix above is correct and test_filter_4 will pass if its\n# JWT is valid.\n#\n# Actually, wait. Let me re-read the error for test_filter_4:\n# \""AssertionError: False is not true\"" at line 149 in test_filter_4.\n# This means filter returned False. With the current code, filter returns False\n# when: (1) request not dict, (2) protected path + user is None.\n# So test_filter_4 likely has a protected path and get_jwt_user returned None.\n# Why would get_jwt_user return None? Maybe the JWT is valid but the date\n# is different. Or maybe the test uses a different user structure.\n#\n# Given the uncertainty, let me propose the fix for the clear bugs (test_filter_6, test_filter_7)\n# and hope test_filter_4 is fixed by the same change or was a different issue.\n#\n# Actually, looking at the test output for test_filter_6 and test_filter_7,\n# the path is '/abc' which is NOT protected. The current code returns True\n# for non-protected paths. The fix is to change this to return False (if JWT valid)\n# or None (if JWT invalid).\n#\n# For test_filter_4, if it has a protected path, the current code should work\n# if JWT is valid. The failure suggests JWT is invalid. Maybe the test uses\n# a different date or the JWT format is different. Without more info, I'll\n# assume the fix for non-protected paths is the main issue.\n#\n# Let me also consider: maybe the filter should return None for non-protected\n# paths regardless of JWT. But test_filter_6 expects False, so that's not it.\n#\n# Final proposed fix:\n\ndef filter(self, request):\n    if not isinstance(request, dict):\n        return False\n\n    path = request.get('path', '')\n    user = self.get_jwt_user(request)\n    \n    if self.is_start_with(path):\n        if user is None:\n            return False\n        self.set_current_user_info_and_log(user)\n        return True\n    else:\n        if user is None:\n            return None\n        return False"", ""eval_result"": {""passed"": false, ""passed_count"": 11, ""failed_count"": 8, ""total_count"": 19, ""passed_tests"": [""builtins.AccessGatewayFilterTestFilter.test_filter_6"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_1"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_2"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_3"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_4"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_5"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_1"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_2"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_3"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_4"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_5""], ""failed_tests"": [{""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_1"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 105, in test_filter_1\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 111, in test_filter_2\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 117, in test_filter_3\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 123, in test_filter_4\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 132, in test_filter_5\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_7"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 150, in test_filter_7\nAssertionError: False is not None\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_8"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 159, in test_filter_8\nAssertionError: None is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTest.test_AccessGatewayFilter"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 236, in test_AccessGatewayFilter\nAssertionError: False is not true\n""}], ""stderr_output"": """", ""result"": null}}, {""attempt"": 2, ""plan"": ""# STEP 1: Bug localization from captured output\n#\n# The captured output shows the filter() method's non-protected branch:\n#   [filter] Path does not start with protected prefix, returning True (non-protected branch)\n# This branch returns True for ANY path not starting with '/api' or '/login'.\n#\n# Test failures observed:\n#   - test_filter_6: path='/abc', valid JWT (user12025-10-19), expected False, got True\n#   - test_filter_7: path='/abc', invalid JWT (user12026-10-19), expected None, got True\n#   - test_filter_4: expected True, got False (protected path, JWT validation issue)\n#\n# The bug is in filter(): the non-protected branch returns True unconditionally,\n# but the tests expect:\n#   - non-protected path + valid JWT   -> False\n#   - non-protected path + invalid JWT -> None\n#\n# STEP 2: Root cause of each failure\n#\n# Bug A (test_filter_6, test_filter_7):\n#   filter() short-circuits on non-protected paths and returns True without\n#   ever validating the JWT. The tests expect the JWT to be validated even for\n#   non-protected paths, with the return value depending on JWT validity:\n#     valid JWT   -> False\n#     invalid JWT -> None\n#\n# Bug B (test_filter_4):\n#   The protected-path branch returns False when get_jwt_user() returns None.\n#   The test expects True. This means get_jwt_user() is returning None for a\n#   request that should be considered valid. The most likely cause is that the\n#   JWT validation is too strict \u2014 specifically, the test may supply a JWT\n#   whose date component does not equal str(datetime.date.today()), OR the\n#   test expects the JWT to be validated against a date embedded in the token\n#   rather than today's date. Given test_filter_6 shows 'user12025-10-19' as\n#   a VALID token (returns False, not None), the test environment's \""today\""\n#   is 2025-10-19. So test_filter_4's JWT likely uses a different user name\n#   or a different date format. The safest fix is to make get_jwt_user()\n#   tolerant: accept the token if the jwt string starts with the user's name\n#   and the remaining suffix parses as a date (or matches today's date string).\n#   However, without the exact test input, the more conservative fix is to\n#   ensure the JWT comparison uses the same date format the tests use\n#   (str(datetime.date.today())), which is already the case. The remaining\n#   possibility is that test_filter_4's request has a protected path but\n#   the JWT is valid \u2014 in which case the current code should already return\n#   True. Since it returns False, get_jwt_user() must be returning None.\n#   The likely culprit: the test's JWT may be 'user1' + today's date but\n#   with a different user name (e.g., 'user2'), or the 'user' dict may lack\n#   a 'name' key. To be robust, get_jwt_user() should not require 'name'\n#   to be a str \u2014 it should fall back gracefully. But the primary fix is\n#   the non-protected branch logic.\n#\n# STEP 3: Lessons from the failed attempt\n#\n# The previous attempt correctly identified that non-protected paths should\n# validate the JWT and return False (valid) / None (invalid). However, it\n# still failed 8 tests. The likely reason: the previous attempt changed\n# filter() to ALWAYS call get_jwt_user() first, even for non-protected\n# paths, and then returned False for valid JWT on non-protected paths.\n# This is correct for test_filter_6/7. But it may have broken other tests\n# (e.g., tests expecting True for non-protected paths with no auth header,\n# or tests expecting False for malformed requests). The lesson: preserve\n# the original short-circuit for requests that are clearly not dicts, and\n# only apply the new JWT-validation logic to the non-protected branch.\n# Also, the previous attempt did not address test_filter_4's JWT validation\n# failure \u2014 it assumed the JWT was valid. The new plan must also make\n# get_jwt_user() more robust (e.g., handle missing 'name' gracefully, and\n# ensure the date comparison uses the exact format the tests expect).\n#\n# STEP 4: Actionable fix plan\n#\n# 1. In filter():\n#    a. Keep the isinstance(request, dict) guard returning False.\n#    b. Extract path.\n#    c. If path starts with a protected prefix:\n#         - user = get_jwt_user(request)\n#         - if user is None: return False\n#         - set_current_user_info_and_log(user)\n#         - return True\n#    d. Else (non-protected path):\n#         - user = get_jwt_user(request)\n#         - if user is None: return None\n#         - return False\n#\n# 2. In get_jwt_user():\n#    a. Keep the structural checks (dict, headers dict, auth dict).\n#    b. Extract user and jwt.\n#    c. Require user to be a dict and jwt to be a str.\n#    d. Extract name = user.get('name'); if name is not a str, return None.\n#    e. Compute expected_jwt = name + str(datetime.date.today()).\n#    f. If jwt != expected_jwt, return None.\n#    g. Return user.\n#    (This is unchanged, but verify the date format matches the test's\n#     'YYYY-MM-DD' format \u2014 str(datetime.date.today()) yields 'YYYY-MM-DD',\n#     which matches 'user12025-10-19'.)\n#\n# 3. In set_current_user_info_and_log():\n#    a. Keep the isinstance(user, dict) guard.\n#    b. Set self.current_user_info = user.\n#    c. Log with name and address (use .get with defaults).\n#\n# 4. In is_start_with():\n#    a. Keep the isinstance(request_uri, str) guard.\n#    b. Return request_uri.startswith('/api') or request_uri.startswith('/login').\n#\n# The key change is step 1d: non-protected paths must still validate the\n# JWT and return False (valid) or None (invalid), instead of returning True."", ""eval_result"": {""passed"": false, ""passed_count"": 11, ""failed_count"": 8, ""total_count"": 19, ""passed_tests"": [""builtins.AccessGatewayFilterTestFilter.test_filter_6"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_1"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_2"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_3"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_4"", ""builtins.AccessGatewayFilterTestGetJwtUser.test_get_jwt_user_5"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_1"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_2"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_3"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_4"", ""builtins.AccessGatewayFilterTestIsStartWith.test_is_start_with_5""], ""failed_tests"": [{""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_1"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 105, in test_filter_1\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_2"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 111, in test_filter_2\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 117, in test_filter_3\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_4"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 123, in test_filter_4\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_5"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 132, in test_filter_5\nAssertionError: False is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_7"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 150, in test_filter_7\nAssertionError: False is not None\n""}, {""name"": ""builtins.AccessGatewayFilterTestFilter.test_filter_8"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 159, in test_filter_8\nAssertionError: None is not true\n""}, {""name"": ""builtins.AccessGatewayFilterTest.test_AccessGatewayFilter"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 236, in test_AccessGatewayFilter\nAssertionError: False is not true\n""}], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,19097,9955,66.84533405303955

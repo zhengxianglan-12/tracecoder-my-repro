@@ -2,6 +2,7 @@ import re
 import time
 from itertools import islice
 import importlib 
+import logging
 from typing import Callable 
 
 # Import functions from sibling modules
@@ -288,16 +289,36 @@ def _load_check_correctness_func(dataset_name: str) -> Callable:
 
 
 # --- Core Processing Functions ---
-def _run_direct_generation(problem_data, args, check_correctness_func_param: Callable): # New parameter
-    """Executes the first phase: direct code generation and evaluation."""
-    prompt = problem_data.get('complete_prompt', '')
+def _run_direct_generation(problem_data, args, check_correctness_func_param: Callable):
+    # 从 ClassEval 的实际字段拼接 prompt
+    if args.dataset == 'classeval':
+        class_name = problem_data.get('class_name', '')
+        class_description = problem_data.get('class_description', '')
+        skeleton = problem_data.get('skeleton', '')
+        constructor = problem_data.get('class_constructor', '')
+        
+        prompt = f"""Please implement the class {class_name}.
+
+Description:
+{class_description}
+
+Skeleton:
+{skeleton}
+
+Constructor:
+{constructor}
+
+Complete the class by implementing all methods. Output only the Python code."""
+    else:
+        prompt = problem_data.get('complete_prompt', '')
+    
     generated_code, p_tokens, c_tokens = generator(prompt, "code3_generate", args.model)
-    # Use the passed-in function
+    
+    # 执行并检查正确性
     eval_result = check_correctness_func_param(problem_data, generated_code, args.timeout)
-    return {"code": generated_code, "eval_result": eval_result, "prompt_tokens": p_tokens,
-            "completion_tokens": c_tokens}
-
-
+    
+    # 返回结果
+    return {"code": generated_code, "eval_result": eval_result, "prompt_tokens": p_tokens, "completion_tokens": c_tokens}
 def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_correctness_func_param: Callable):
     """Executes the second phase: self-debugging loop (updated to include complete logic)."""
     code_to_debug, last_eval, best_code, best_eval = initial_code, initial_eval, initial_code, initial_eval
@@ -305,8 +326,7 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
     instrumentation_suggestions = ""  # Initialize suggestions
 
     for attempt in range(1, args.max_debug_attempts + 1):
-        print(
-            f"--- Debug attempt: {attempt}/{args.max_debug_attempts} | Best: {best_eval.get('passed_count', 0)}/{best_eval.get('total_count', 1)} ---")
+        logging.info(f"--- Debug attempt: {attempt}/{args.max_debug_attempts} | Best: {best_eval.get('passed_count', 0)}/{best_eval.get('total_count', 1)} ---")
 
         # 1. Instrumentation
         captured_prints = "Instrumentation skipped or not applicable."
@@ -343,16 +363,16 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
         else:
             # If there's no repair plan, we can't proceed with implementation.
             # This also handles the "one-step" case where the analysis prompt might not return a plan.
-            print("LLM did not provide a repair plan, terminating debugging.")
+            logging.info("LLM did not provide a repair plan, terminating debugging.")
             break
 
         # 3. Evaluation and decision-making
         if not candidate_code.strip():
-            print("LLM did not provide valid code, terminating debugging.")
+            logging.info("LLM did not provide valid code, terminating debugging.")
             break
 
         eval_candidate = check_correctness_func_param(problem_data, candidate_code, args.timeout) # Use the passed-in function
-        print(f"Candidate repair result: {format_check_correctness_result(eval_candidate)}")
+        logging.info(f"Candidate repair result: {format_check_correctness_result(eval_candidate)}")
 
         attempt_log = {"attempt": attempt, "plan": repair_plan, "eval_result": eval_candidate}
         log.append(attempt_log)
@@ -365,10 +385,16 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
             best_code, best_eval, code_to_debug, last_eval, streak = candidate_code, eval_candidate, candidate_code, eval_candidate, 0
         else:
             streak += 1
+            # ==========================================
+            # 新增：实现强制回滚机制 (Rollback)
+            # ==========================================
+            logging.info(f"⚠️ 检测到候选代码退步 (当前: {eval_candidate.get('passed_count', 0)}, 历史最高: {best_eval.get('passed_count', 0)})，触发回滚！")
+            code_to_debug = best_code       # 强制把下一轮的基础代码换成历史最高分的代码
+            last_eval = best_eval           # 把上一轮的错误反馈也换成最高分时的反馈
 
         history.append(attempt_log)
         if streak >= args.max_no_improvement_streak:
-            print(f"{streak} consecutive attempts with no improvement, terminating debugging.")
+            logging.info(f"{streak} consecutive attempts with no improvement, terminating debugging.")
             break
 
     return {"final_code": best_code, "final_eval": best_eval, "session_log": log, "prompt_tokens": p_tokens,
@@ -378,7 +404,7 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
 # The `process_problem` function remains unchanged as it only calls the core functions above
 def process_problem(problem_data, task_id, args, check_correctness_func_param: Callable): # New parameter
     # (This function does not need modification; it is copied from the previous version)
-    print(f"\n{'=' * 25} Processing problem: {task_id} {'=' * 25}")
+    logging.info(f"\n{'=' * 25} Processing problem: {task_id} {'=' * 25}")
     start_time = time.time()
 
     gen_res = _run_direct_generation(problem_data, args, check_correctness_func_param) # Pass parameter
@@ -394,11 +420,11 @@ def process_problem(problem_data, task_id, args, check_correctness_func_param: C
     total_p, total_c = gen_res["prompt_tokens"], gen_res["completion_tokens"]
 
     if result["direct_gen_passed"]:
-        print("Direct generation passed successfully.")
+        logging.info("Direct generation passed successfully.")
         result.update({"final_code": gen_res["code"], "final_eval": gen_res["eval_result"], "final_passed": True,
                        "stopped_reason": "Passed on direct generation"})
     else:
-        print("Direct generation failed, entering self-debugging phase.")
+        logging.info("Direct generation failed, entering self-debugging phase.")
         debug_res = _run_self_debugging(gen_res["code"], gen_res["eval_result"], problem_data, args, check_correctness_func_param) # Pass parameter
         result.update({
             "final_code": debug_res["final_code"], "final_eval": debug_res["final_eval"],
@@ -411,5 +437,5 @@ def process_problem(problem_data, task_id, args, check_correctness_func_param: C
     result.update({"total_prompt_tokens": total_p, "total_completion_tokens": total_c,
                    "processing_time_seconds": time.time() - start_time})
 
-    print(f"Problem {task_id} processing completed. Final result: {'Passed' if result['final_passed'] else 'Failed'}")
+    logging.info(f"Problem {task_id} processing completed. Final result: {'Passed' if result['final_passed'] else 'Failed'}")
     return result

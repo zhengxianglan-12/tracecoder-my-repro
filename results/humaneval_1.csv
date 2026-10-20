@@ -1,0 +1,48 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+HumanEval/1,deepseek-chat,humaneval,True,True,"from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    # Remove all spaces from the input string
+    paren_string = paren_string.replace("" "", """")
+    
+    result = []
+    current_group = """"
+    balance = 0
+    
+    for char in paren_string:
+        current_group += char
+        
+        if char == '(':
+            balance += 1
+        elif char == ')':
+            balance -= 1
+        
+        # When balance returns to 0, we've completed a group
+        if balance == 0:
+            result.append(current_group)
+            current_group = """"
+    
+    return result","{""task_id"": ""HumanEval/1"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 4, ""failed_count"": 0, ""total_count"": 4}",True,"from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    # Remove all spaces from the input string
+    paren_string = paren_string.replace("" "", """")
+    
+    result = []
+    current_group = """"
+    balance = 0
+    
+    for char in paren_string:
+        current_group += char
+        
+        if char == '(':
+            balance += 1
+        elif char == ')':
+            balance -= 1
+        
+        # When balance returns to 0, we've completed a group
+        if balance == 0:
+            result.append(current_group)
+            current_group = """"
+    
+    return result","{""task_id"": ""HumanEval/1"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 4, ""failed_count"": 0, ""total_count"": 4}",True,Passed on direct generation,131,487,17.529924869537354

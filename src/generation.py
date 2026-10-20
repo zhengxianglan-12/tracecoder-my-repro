@@ -12,8 +12,8 @@ from .postprocessing import extract_python_code
 
 # --- OpenAI/Compatible API Client Configuration ---
 client = OpenAI(
-    api_key="your_api_key_here",
-    base_url="your_base_url_here"
+    api_key="sk-2c820e74762a4065bbf7f729ac840a8b",
+    base_url="https://api.deepseek.com/v1"
 )
 
 # Configure logger
@@ -92,10 +92,10 @@ def call_api(prompt, model, max_tokens_response=4096):
         response = client.chat.completions.create(
             model=model,
             messages=[
-                {"role": "system",
-                 "content": "You are a helpful assistant specialized in code generation and debugging."},
-                {"role": "user", "content": prompt}
-            ],
+    {"role": "system",
+     "content": "You are a code generation assistant. Generate Python code only. Never use markdown code fences (```python). Output raw Python code directly. No explanations, no greetings."},
+    {"role": "user", "content": prompt}
+],
             temperature=0.2,
         )
         result_text = response.choices[0].message.content

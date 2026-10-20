@@ -1,0 +1,11 @@
+✅ 本次运行日志将自动保存至: results/run_logs/terminal_output_20261019_091409.txt
+✅ 运行元数据已成功保存至: results/run_logs/run_meta_classeval_deepseek-chat_20261019_091409.json
+--- Experiment Start: classeval_deepseek-chat_20261019_091409 ---
+Arguments: {'model': 'deepseek-chat', 'dataset': 'classeval', 'no_instrumentation': False, 'no_two_step_repair': False, 'start_index': 0, 'max_problems': 1, 'max_debug_attempts': 5, 'max_no_improvement_streak': 2, 'timeout': 10, 'output_file': 'results/retest_ClassEval_0.csv'}
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"
+HTTP Request: POST https://api.deepseek.com/v1/chat/completions "HTTP/1.1 200 OK"

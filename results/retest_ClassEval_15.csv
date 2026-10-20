@@ -1,0 +1,138 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,debug_session_log,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+ClassEval_15,deepseek-chat,classeval,True,True,"class BoyerMooreSearch:
+    """"""
+    his is a class that implements the Boyer-Moore algorithm for string searching, which is used to find occurrences of a pattern within a given text.
+    """"""
+
+    def __init__(self, text, pattern):
+        """"""
+        Initializes the BoyerMooreSearch class with the given text and pattern.
+        :param text: The text to be searched, str.
+        :param pattern: The pattern to be searched for, str.
+        """"""
+        self.text, self.pattern = text, pattern
+        self.textLen, self.patLen = len(text), len(pattern)
+
+    def match_in_pattern(self, char):
+        """"""
+        Finds the rightmost occurrence of a character in the pattern.
+        :param char: The character to be searched for, str.
+        :return: The index of the rightmost occurrence of the character in the pattern, int.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""AB"")
+        >>> boyerMooreSearch.match_in_pattern(""A"")
+        0
+
+        """"""
+        for i in range(self.patLen - 1, -1, -1):
+            if self.pattern[i] == char:
+                return i
+        return -1
+
+    def mismatch_in_text(self, currentPos):
+        """"""
+        Determines the position of the first dismatch between the pattern and the text.
+        :param currentPos: The current position in the text, int.
+        :return: The position of the first dismatch between the pattern and the text, int,otherwise -1.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""ABC"")
+        >>> boyerMooreSearch.mismatch_in_text(0)
+        2
+
+        """"""
+        for i in range(self.patLen - 1, -1, -1):
+            if self.pattern[i] != self.text[currentPos + i]:
+                return currentPos + i
+        return -1
+
+    def bad_character_heuristic(self):
+        """"""
+        Finds all occurrences of the pattern in the text.
+        :return: A list of all positions of the pattern in the text, list.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""AB"")
+        >>> boyerMooreSearch.bad_character_heuristic()
+        [0, 3]
+
+        """"""
+        positions = []
+        if self.patLen == 0 or self.patLen > self.textLen:
+            return positions
+        i = 0
+        while i <= self.textLen - self.patLen:
+            mismatch = self.mismatch_in_text(i)
+            if mismatch == -1:
+                positions.append(i)
+                i += 1
+            else:
+                char = self.text[mismatch]
+                idx = self.match_in_pattern(char)
+                shift = mismatch - i - idx
+                i += shift if shift > 0 else 1
+        return positions","{""passed"": false, ""passed_count"": 15, ""failed_count"": 1, ""total_count"": 16, ""passed_tests"": [""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_2"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_4"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_5"", ""builtins.BoyerMooreSearchTestMain.test_main"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_2"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_3"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_4"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_5"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_2"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_3"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_4"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_5""], ""failed_tests"": [{""name"": ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_3"", ""type"": ""Failure"", ""details"": ""Traceback (most recent call last):\n  File \""<string>\"", line 127, in test_bad_character_heuristic_3\nAssertionError: Lists differ: [] != [0, 1, 2, 3, 4, 5, 6]\n\nSecond list contains 7 additional elements.\nFirst extra element 0:\n0\n\n- []\n+ [0, 1, 2, 3, 4, 5, 6]\n""}], ""stderr_output"": """", ""result"": null}",False,"class BoyerMooreSearch:
+    """"""
+    his is a class that implements the Boyer-Moore algorithm for string searching, which is used to find occurrences of a pattern within a given text.
+    """"""
+
+    def __init__(self, text, pattern):
+        """"""
+        Initializes the BoyerMooreSearch class with the given text and pattern.
+        :param text: The text to be searched, str.
+        :param pattern: The pattern to be searched for, str.
+        """"""
+        self.text, self.pattern = text, pattern
+        self.textLen, self.patLen = len(text), len(pattern)
+
+    def match_in_pattern(self, char):
+        """"""
+        Finds the rightmost occurrence of a character in the pattern.
+        :param char: The character to be searched for, str.
+        :return: The index of the rightmost occurrence of the character in the pattern, int.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""AB"")
+        >>> boyerMooreSearch.match_in_pattern(""A"")
+        0
+
+        """"""
+        for i in range(self.patLen - 1, -1, -1):
+            if self.pattern[i] == char:
+                return i
+        return -1
+
+    def mismatch_in_text(self, currentPos):
+        """"""
+        Determines the position of the first dismatch between the pattern and the text.
+        :param currentPos: The current position in the text, int.
+        :return: The position of the first dismatch between the pattern and the text, int,otherwise -1.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""ABC"")
+        >>> boyerMooreSearch.mismatch_in_text(0)
+        2
+
+        """"""
+        for i in range(self.patLen - 1, -1, -1):
+            if self.pattern[i] != self.text[currentPos + i]:
+                return currentPos + i
+        return -1
+
+    def bad_character_heuristic(self):
+        """"""
+        Finds all occurrences of the pattern in the text.
+        :return: A list of all positions of the pattern in the text, list.
+        >>> boyerMooreSearch = BoyerMooreSearch(""ABAABA"", ""AB"")
+        >>> boyerMooreSearch.bad_character_heuristic()
+        [0, 3]
+
+        """"""
+        positions = []
+        if self.patLen == 0:
+            return list(range(self.textLen + 1))
+        if self.patLen > self.textLen:
+            return positions
+        i = 0
+        while i <= self.textLen - self.patLen:
+            mismatch = self.mismatch_in_text(i)
+            if mismatch == -1:
+                positions.append(i)
+                i += 1
+            else:
+                char = self.text[mismatch]
+                idx = self.match_in_pattern(char)
+                shift = mismatch - i - idx
+                i += shift if shift > 0 else 1
+        return positions","{""passed"": true, ""passed_count"": 16, ""failed_count"": 0, ""total_count"": 16, ""passed_tests"": [""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_2"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_3"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_4"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_5"", ""builtins.BoyerMooreSearchTestMain.test_main"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_2"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_3"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_4"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_5"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_2"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_3"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_4"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}",True,"[{""attempt"": 1, ""plan"": ""# Step 1: Bug Analysis\n# The failing test is test_bad_character_heuristic_3:\n#   text='ABAABA', pattern=''\n#   Expected: [0, 1, 2, 3, 4, 5, 6]\n#   Actual:   []\n#\n# In bad_character_heuristic, the early-return guard is:\n#   if self.patLen == 0 or self.patLen > self.textLen:\n#       return positions   # -> []\n#\n# For an empty pattern, the conventional (and test-expected) behavior is that\n# the empty pattern matches at every position from 0 through len(text)\n# inclusive, i.e. [0, 1, 2, 3, 4, 5, 6] for a 6-char text.\n# The current code incorrectly treats patLen == 0 as \""no matches\"".\n#\n# Step 2: Root Cause\n# The condition `self.patLen == 0` short-circuits to an empty result list.\n# The empty-pattern case must instead return list(range(self.textLen + 1)).\n# The `patLen > textLen` guard is still valid for non-empty patterns.\n#\n# Step 3: Lessons from MISTAKES TO AVOID\n# No prior attempts exist for this instance, so no specific pitfalls to avoid.\n# General lesson: preserve the existing correct behavior for non-empty\n# patterns (the other 15 tests pass) and only special-case the empty pattern.\n#\n# Step 4: Fix Plan\n# 1. In bad_character_heuristic, split the guard:\n#    - If patLen == 0: return list(range(textLen + 1)).\n#    - If patLen > textLen: return [].\n# 2. Leave the rest of the algorithm (mismatch_in_text, match_in_pattern,\n#    shift logic) unchanged, since all other tests pass.\n# 3. Do not modify __init__, match_in_pattern, or mismatch_in_text.\n\nclass BoyerMooreSearch:\n    def __init__(self, text, pattern):\n        self.text, self.pattern = text, pattern\n        self.textLen, self.patLen = len(text), len(pattern)\n\n    def match_in_pattern(self, char):\n        for i in range(self.patLen - 1, -1, -1):\n            if self.pattern[i] == char:\n                return i\n        return -1\n\n    def mismatch_in_text(self, currentPos):\n        for i in range(self.patLen - 1, -1, -1):\n            if self.pattern[i] != self.text[currentPos + i]:\n                return currentPos + i\n        return -1\n\n    def bad_character_heuristic(self):\n        positions = []\n        if self.patLen == 0:\n            return list(range(self.textLen + 1))\n        if self.patLen > self.textLen:\n            return positions\n        i = 0\n        while i <= self.textLen - self.patLen:\n            mismatch = self.mismatch_in_text(i)\n            if mismatch == -1:\n                positions.append(i)\n                i += 1\n            else:\n                char = self.text[mismatch]\n                idx = self.match_in_pattern(char)\n                shift = mismatch - i - idx\n                i += shift if shift > 0 else 1\n        return positions"", ""eval_result"": {""passed"": true, ""passed_count"": 16, ""failed_count"": 0, ""total_count"": 16, ""passed_tests"": [""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_2"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_3"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_4"", ""builtins.BoyerMooreSearchTestBadCharacterHeuristic.test_bad_character_heuristic_5"", ""builtins.BoyerMooreSearchTestMain.test_main"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_2"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_3"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_4"", ""builtins.BoyerMooreSearchTestMatchInPattern.test_match_in_pattern_5"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_2"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_3"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_4"", ""builtins.BoyerMooreSearchTestMismatchInText.test_mismatch_in_text_5""], ""failed_tests"": [], ""stderr_output"": """", ""result"": null}}]",Debug cycle completed,5974,3435,29.536811351776123

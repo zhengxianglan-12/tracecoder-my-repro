@@ -1,0 +1,138 @@
+﻿task_id,model,dataset,method_instrumentation,method_two_step_repair,direct_gen_code,direct_gen_eval,direct_gen_passed,final_code,final_eval,final_passed,stopped_reason,total_prompt_tokens,total_completion_tokens,processing_time_seconds
+HumanEval/70,deepseek-chat,humanevalplus,True,True,"def strange_sort_list(lst):
+    '''
+    Given list of integers, return list in strange order.
+    Strange sorting, is when you start with the minimum value,
+    then maximum of the remaining integers, then minimum and so on.
+
+    Examples:
+    strange_sort_list([1, 2, 3, 4]) == [1, 4, 2, 3]
+    strange_sort_list([5, 5, 5, 5]) == [5, 5, 5, 5]
+    strange_sort_list([]) == []
+    '''
+    result = []
+    lst = sorted(lst)
+    while lst:
+        result.append(lst.pop(0))   # take minimum
+        if lst:
+            result.append(lst.pop())  # take maximum
+    return result","{""task_id"": ""HumanEval/70"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 983, ""failed_count"": 0, ""total_count"": 0}",True,"def strange_sort_list(lst):
+    '''
+    Given list of integers, return list in strange order.
+    Strange sorting, is when you start with the minimum value,
+    then maximum of the remaining integers, then minimum and so on.
+
+    Examples:
+    strange_sort_list([1, 2, 3, 4]) == [1, 4, 2, 3]
+    strange_sort_list([5, 5, 5, 5]) == [5, 5, 5, 5]
+    strange_sort_list([]) == []
+    '''
+    result = []
+    lst = sorted(lst)
+    while lst:
+        result.append(lst.pop(0))   # take minimum
+        if lst:
+            result.append(lst.pop())  # take maximum
+    return result","{""task_id"": ""HumanEval/70"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 983, ""failed_count"": 0, ""total_count"": 0}",True,Passed on direct generation,135,184,16.16071391105652
+HumanEval/71,deepseek-chat,humanevalplus,True,True,"def triangle_area(a, b, c):
+    '''
+    Given the lengths of the three sides of a triangle. Return the area of
+    the triangle rounded to 2 decimal points if the three sides form a valid triangle. 
+    Otherwise return -1
+    Three sides make a valid triangle when the sum of any two sides is greater 
+    than the third side.
+    Example:
+    triangle_area(3, 4, 5) == 6.00
+    triangle_area(1, 2, 10) == -1
+    '''
+    # Check if the three sides form a valid triangle
+    if a + b > c and a + c > b and b + c > a:
+        # Using Heron's formula to calculate area
+        s = (a + b + c) / 2
+        area = (s * (s - a) * (s - b) * (s - c)) ** 0.5
+        return round(area, 2)
+    else:
+        return -1","{""task_id"": ""HumanEval/71"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 1006, ""failed_count"": 0, ""total_count"": 0}",True,"def triangle_area(a, b, c):
+    '''
+    Given the lengths of the three sides of a triangle. Return the area of
+    the triangle rounded to 2 decimal points if the three sides form a valid triangle. 
+    Otherwise return -1
+    Three sides make a valid triangle when the sum of any two sides is greater 
+    than the third side.
+    Example:
+    triangle_area(3, 4, 5) == 6.00
+    triangle_area(1, 2, 10) == -1
+    '''
+    # Check if the three sides form a valid triangle
+    if a + b > c and a + c > b and b + c > a:
+        # Using Heron's formula to calculate area
+        s = (a + b + c) / 2
+        area = (s * (s - a) * (s - b) * (s - c)) ** 0.5
+        return round(area, 2)
+    else:
+        return -1","{""task_id"": ""HumanEval/71"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 1006, ""failed_count"": 0, ""total_count"": 0}",True,Passed on direct generation,132,413,16.218740701675415
+HumanEval/72,deepseek-chat,humanevalplus,True,True,"def will_it_fly(q, w):
+    # Check if the list is a palindrome
+    # A list is a palindrome if it reads the same forwards and backwards
+    is_palindrome = q == q[::-1]
+    
+    # Check if the sum of elements is less than or equal to w
+    sum_within_weight = sum(q) <= w
+    
+    # Return True only if both conditions are met
+    return is_palindrome and sum_within_weight","{""task_id"": ""HumanEval/72"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 697, ""failed_count"": 0, ""total_count"": 0}",True,"def will_it_fly(q, w):
+    # Check if the list is a palindrome
+    # A list is a palindrome if it reads the same forwards and backwards
+    is_palindrome = q == q[::-1]
+    
+    # Check if the sum of elements is less than or equal to w
+    sum_within_weight = sum(q) <= w
+    
+    # Return True only if both conditions are met
+    return is_palindrome and sum_within_weight","{""task_id"": ""HumanEval/72"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 697, ""failed_count"": 0, ""total_count"": 0}",True,Passed on direct generation,239,353,16.247325897216797
+HumanEval/73,deepseek-chat,humanevalplus,True,True,"def smallest_change(arr):
+    """"""
+    Given an array arr of integers, find the minimum number of elements that
+    need to be changed to make the array palindromic.
+    """"""
+    n = len(arr)
+    changes = 0
+    
+    # Compare symmetric pairs
+    for i in range(n // 2):
+        if arr[i] != arr[n - 1 - i]:
+            changes += 1
+    
+    return changes","{""task_id"": ""HumanEval/73"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 970, ""failed_count"": 0, ""total_count"": 0}",True,"def smallest_change(arr):
+    """"""
+    Given an array arr of integers, find the minimum number of elements that
+    need to be changed to make the array palindromic.
+    """"""
+    n = len(arr)
+    changes = 0
+    
+    # Compare symmetric pairs
+    for i in range(n // 2):
+        if arr[i] != arr[n - 1 - i]:
+            changes += 1
+    
+    return changes","{""task_id"": ""HumanEval/73"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 970, ""failed_count"": 0, ""total_count"": 0}",True,Passed on direct generation,166,402,17.31949234008789
+HumanEval/74,deepseek-chat,humanevalplus,True,True,"def total_match(lst1, lst2):
+    # Calculate total characters in each list
+    total1 = sum(len(s) for s in lst1)
+    total2 = sum(len(s) for s in lst2)
+    
+    # Return the list with fewer characters, or lst1 if equal
+    if total1 <= total2:
+        return lst1
+    else:
+        return lst2","{""task_id"": ""HumanEval/74"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 985, ""failed_count"": 0, ""total_count"": 0}",True,"def total_match(lst1, lst2):
+    # Calculate total characters in each list
+    total1 = sum(len(s) for s in lst1)
+    total2 = sum(len(s) for s in lst2)
+    
+    # Return the list with fewer characters, or lst1 if equal
+    if total1 <= total2:
+        return lst1
+    else:
+        return lst2","{""task_id"": ""HumanEval/74"", ""passed"": true, ""result"": ""passed"", ""completion_id"": null, ""passed_count"": 985, ""failed_count"": 0, ""total_count"": 0}",True,Passed on direct generation,206,522,16.519787073135376
