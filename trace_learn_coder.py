@@ -44,14 +44,17 @@ def main():
     run_time = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
     EXPERIMENT_ID = f"{args.dataset}_{args.model.replace('/', '_')}_{run_time}"
     OUTPUT_CSV_FILENAME = args.output_file or f"results/experiment_{EXPERIMENT_ID}.csv"
-    
+    try:
+        current_commit = subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip()
+    except Exception:
+        current_commit = "未知"
     # 新增：自动保存运行元数据（溯源信息）
     run_meta = {
         "run_timestamp": run_time,
         "command_args": sys.argv,
         "model": args.model,
         "dataset": args.dataset,
-        "git_commit": "未配置Git，无法记录"
+        "git_commit": "current_commit"
     }
     meta_path = f'results/run_logs/run_meta_{EXPERIMENT_ID}.json'
     with open(meta_path, 'w', encoding='utf-8') as f:
