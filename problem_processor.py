@@ -4,6 +4,7 @@ from itertools import islice
 import importlib 
 import logging
 from typing import Callable 
+import hashlib
 
 # Import functions from sibling modules
 from config import DATASET_PATHS 
@@ -325,6 +326,11 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
     log, history, p_tokens, c_tokens, streak = [], [], 0, 0, 0
     instrumentation_suggestions = ""  # Initialize suggestions
 
+    # 新增：引入 hashlib 用于计算代码哈希
+    import hashlib
+    def get_hash(code_str):
+        return hashlib.md5(code_str.encode('utf-8')).hexdigest()[:8] if code_str else "empty"
+
     for attempt in range(1, args.max_debug_attempts + 1):
         logging.info(f"--- Debug attempt: {attempt}/{args.max_debug_attempts} | Best: {best_eval.get('passed_count', 0)}/{best_eval.get('total_count', 1)} ---")
 
@@ -374,23 +380,51 @@ def _run_self_debugging(initial_code, initial_eval, problem_data, args, check_co
         eval_candidate = check_correctness_func_param(problem_data, candidate_code, args.timeout) # Use the passed-in function
         logging.info(f"Candidate repair result: {format_check_correctness_result(eval_candidate)}")
 
-        attempt_log = {"attempt": attempt, "plan": repair_plan, "eval_result": eval_candidate}
-        log.append(attempt_log)
+        # --- 新增：记录当前这一轮的状态、代码哈希和下一轮输入 ---
+        curr_score = eval_candidate.get('passed_count', 0)
+        best_score = best_eval.get('passed_count', 0)
+        status = "unknown"
 
         if eval_candidate.get('passed'):
+            status = "passed"
             best_code, best_eval = candidate_code, eval_candidate
+            code_to_debug = candidate_code
+            logging.info(f"🎯 [第 {attempt} 轮] 全部通过！状态：passed | 候选代码Hash: {get_hash(candidate_code)}")
             break
 
-        if eval_candidate.get('passed_count', 0) > best_eval.get('passed_count', 0):
+        if curr_score > best_score:
+            status = "improve"
             best_code, best_eval, code_to_debug, last_eval, streak = candidate_code, eval_candidate, candidate_code, eval_candidate, 0
-        else:
+            logging.info(f"📈 [第 {attempt} 轮] 改进！状态：improve | 候选Hash: {get_hash(candidate_code)} | 当前输入 -> 本候选 | 历史最优分: {curr_score}")
+        elif curr_score == best_score:
+            status = "tie"
             streak += 1
-            # ==========================================
-            # 新增：实现强制回滚机制 (Rollback)
-            # ==========================================
-            logging.info(f"⚠️ 检测到候选代码退步 (当前: {eval_candidate.get('passed_count', 0)}, 历史最高: {best_eval.get('passed_count', 0)})，触发回滚！")
-            code_to_debug = best_code       # 强制把下一轮的基础代码换成历史最高分的代码
-            last_eval = best_eval           # 把上一轮的错误反馈也换成最高分时的反馈
+            logging.info(f"⏸️ [第 {attempt} 轮] 持平！状态：tie | 候选Hash: {get_hash(candidate_code)} | 当前输入保持不变 | 历史最优分: {best_score}")
+        else:
+            status = "regress"
+            streak += 1
+            logging.info(f"📉 [第 {attempt} 轮] 退步！状态：regress | 候选Hash: {get_hash(candidate_code)} | 历史最优Hash: {get_hash(best_code)}")
+            logging.info(f"===== 候选代码本体 =====\n{candidate_code}\n========================")
+            logging.info(f"===== 历史最优代码本体 =====\n{best_code}\n========================")
+            logging.info(f"⚠️ 触发回滚！下一轮输入强制替换为历史最优代码 | 历史最优Hash: {get_hash(best_code)}")
+            logging.info(f"===== 下一轮实际输入代码本体 =====\n{code_to_debug}\n========================")
+            code_to_debug = best_code
+            last_eval = best_eval
+
+        # 将这一轮的所有重要信息存入 log（为了最后写进 CSV）
+        attempt_log = {
+            "attempt": attempt,
+            "plan": repair_plan,
+            "eval_result": eval_candidate,
+            "status": status,
+            "candidate_code_hash": get_hash(candidate_code),
+            "next_input_code_hash": get_hash(code_to_debug),
+            "best_code_hash": get_hash(best_code),
+            "candidate_code": candidate_code,      # 存代码本体
+            "next_input_code": code_to_debug,      # 存下一轮实际输入代码
+            "best_code": best_code                 # 存历史最优代码
+        }
+        log.append(attempt_log)
 
         history.append(attempt_log)
         if streak >= args.max_no_improvement_streak:

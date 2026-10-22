@@ -12,7 +12,7 @@ from .postprocessing import extract_python_code
 
 # --- OpenAI/Compatible API Client Configuration ---
 client = OpenAI(
-    api_key=os.environ.get("DEEPSEEK_API_KEY"),
+    api_key="sk-2c820e74762a4065bbf7f729ac840a8b",
     base_url="https://api.deepseek.com/v1"
 )
 
